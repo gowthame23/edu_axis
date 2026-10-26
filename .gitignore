@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+Backend/node_modules/
+frontend/node_modules/
+legacy_ejs_version/node_modules/
+
+# Environment variables & credentials (NEVER commit secrets to GitHub)
+.env
+.env.local
+.env.production
+.env.development
+Backend/.env
+legacy_ejs_version/.env
+*.env
+!.env.example
+!Backend/.env.example
+
+# Build and distribution files
+dist/
+build/
+frontend/dist/
+
+# Logs
+logs/
+Backend/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

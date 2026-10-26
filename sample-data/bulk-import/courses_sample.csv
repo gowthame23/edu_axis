@@ -1,0 +1,6 @@
+name,code,grade,description,teacher,teacherEmail,credits,semester
+Mathematics,MATH101,10,Foundational mathematics for grade 10,Priya Nair,priya.nair@acrd.com,4,Annual
+Physics,PHY201,11,Mechanics and thermodynamics,Arjun Verma,arjun.verma@acrd.com,4,Annual
+English Literature,ENG301,9,Reading and writing skills,Neha Iyer,neha.iyer@acrd.com,3,Fall
+World History,HIS401,12,Modern world history,Vikram Joshi,vikram.joshi@acrd.com,3,Spring
+Computer Science,CSE501,10,Programming fundamentals,Meera Kapoor,meera.kapoor@acrd.com,4,Annual

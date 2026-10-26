@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Assignments - EduAxis</title>
+		<link rel="icon" href="img/favicon.ico" />
+		
+		<link
+			href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" type="text/css" href="css/cards.css" />
+
+		
+		<link rel="stylesheet" type="text/css" href="css/uikit.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/dashboard.css" />
+
+	</head>
+	<body>
+		<!--HEADER-->
+		<header>
+			<div class="uk-container">
+				<nav class="uk-navbar-transparent" data-uk-navbar>
+					
+					<div class="left-logo uk-flex uk-flex-middle">
+						<div>
+							<a class="text-nowrap">
+								<img style="border-radius: 50%;"
+									src="img/ea.png"
+									width="50"
+									class="rounded-circle"
+									alt="Logo"
+								/>
+								EduAxis
+							</a>
+						</div>
+					</div>
+					
+					<div class="uk-navbar-right">
+						<ul class="uk-navbar-nav">
+							<li>
+								<a href="#" data-uk-icon="icon:user"></a>
+								<div class="uk-navbar-dropdown uk-navbar-dropdown-bottom-left">
+									<ul class="uk-nav uk-navbar-dropdown-nav">
+										<li class="uk-nav-header uk-text-small uk-text-primary">
+											YOUR ACCOUNT
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: info"></span> Summary</a
+											>
+										</li>
+										
+										<li>
+											<!-- Unenroll button with confirmation and AJAX request -->
+											<a
+												href="#"
+												class="text-danger"
+												onclick="confirmUnenroll('<%= Unit._id %>')"
+												role="button"
+												aria-label="Unenroll from Unit"
+											>
+											<span data-uk-icon="icon: trash"></span> Unenroll From Unit
+											</a>
+										</li>
+										<li class="uk-nav-divider"></li>
+
+
+										<li>
+											<a href="/logout" data-logout
+												><span data-uk-icon="icon: sign-out"></span> Logout</a
+											>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="uk-hidden@m">
+								<a
+									class="uk-navbar-toggle"
+									data-uk-toggle
+									data-uk-navbar-toggle-icon
+									href="#offcanvas-nav"
+								></a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--/HEADER-->
+
+		<!--HERO-->
+		<section class="uk-section uk-section-large uk-section-secondary">
+			<div class="uk-container uk-container-small uk-text-center">
+				<h1><%= Unit.unitName %></h1>
+				<p class="uk-text-large">
+					<h2><%= Unit.unitCode %></h2>
+				</p>
+				<div data-uk-margin>
+					<a
+						class="uk-button uk-button-primary"
+						href="#modal-center1"
+						data-uk-toggle
+						>New Action</a
+					>
+
+					<a
+						class="uk-button uk-button-default"
+						href="/dashboard"
+						data-uk-toggle
+						>Back to Dashboard
+					</a>
+				</div>
+			</div>
+		</section>
+
+
+		<section class="uk-section uk-section-muted">
+			<% function formatDate(dateString) { %> <% const date = new
+			Date(dateString); %> <% const day = date.getUTCDate(); %> <% const month =
+			date.toLocaleString("default", { month: "long" }); %> <% const year =
+			date.getUTCFullYear(); %> <% return `${day}, ${month}, ${year}`; %> <% }
+			%>
+			<div class="uk-container">
+				<div
+					class="uk-grid uk-grid-small uk-child-width-1-2 uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+					data-uk-lightbox="toggle:a.uk-position-cover"
+					data-uk-grid
+				></div>
+				<div
+					class="uk-grid uk-grid-large"
+					data-uk-grid
+					uk-sortable="handle: .sortable-icon"
+				>
+					<div class="uk-width-1-1@l">
+						<div class="uk-card">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>
+											<span class="badge bg-primary"
+												><%= Unit.announcements.length%></span
+											>
+											Announcements
+										</h4>
+									</div>
+
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<button
+											class="btn btn-outline-primary"
+											title="Move"
+											data-uk-tooltip
+										>
+											<a
+												class="uk-icon-link sortable-icon uk-text-primary"
+												data-uk-icon="icon: move"
+											></a>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div
+									class="uk-child-width-1-1@m uk-grid-small uk-grid-match"
+									uk-grid
+								>
+									<!-- The Unit List -->
+									<% Unit.announcements.forEach(announcement=> { %>
+									<form action="/units" method="post">
+										<input
+											type="hidden"
+											name="unitId"
+											value="<%= announcement._id %>"
+										/>
+										<button type="submit" class="btn text-start">
+											<div>
+												<div class="uk-card uk-card-small uk-card-default my-3">
+													<div class="uk-card-header">
+														<div
+															class="uk-grid uk-grid-small uk-text-small"
+															data-uk-grid
+														>
+															<div
+																class="uk-width-expand"
+																title="Class"
+																data-uk-tooltip
+															>
+																<span class="cat-txt"> unit.unitCode </span>
+															</div>
+
+															<div
+																class="uk-width-auto uk-text-right uk-text-muted"
+																title="Posted On"
+																data-uk-tooltip
+															>
+																<span
+																	data-uk-tooltip="title: Status: Expired "
+																	class="uk-text-success"
+																>
+																	🔴
+																</span>
+
+																<span
+																	data-uk-tooltip="title: Status: Active "
+																	class="uk-text-success"
+																>
+																	🟢
+																</span>
+
+																<span
+																	data-uk-icon="icon:clock; ratio: 0.8"
+																></span>
+																<%= formatDate(announcement.createdAt) %>
+															</div>
+														</div>
+													</div>
+													<div class="uk-card-media"></div>
+
+													<div class="uk-card-body">
+														<h6
+															class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+														>
+															<%= announcement.announcementTitle %>
+														</h6>
+														<p class="uk-text-small uk-text-muted">
+															<%= announcement.announcementDetails %>
+														</p>
+														<p class="uk-text-small uk-text-muted">
+															Created : <%= formatDate(announcement.createdAt)%>
+														</p>
+													</div>
+												
+												</div>
+											</div>
+										</button>
+									</form>
+									<% }) %>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="uk-width-1-1@l">
+						<div class="uk-card">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>
+											<span class="badge bg-primary">
+												<%= Unit.assignments.length%>
+											</span>
+											Assignments
+										</h4>
+									</div>
+
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<button
+											class="btn btn-outline-primary"
+											title="Move"
+											data-uk-tooltip
+										>
+											<a
+												class="uk-icon-link sortable-icon uk-text-primary"
+												data-uk-icon="icon: move"
+											></a>
+										</button>
+
+										<button
+											class="btn btn-outline-primary"
+											title="Refresh"
+											data-uk-tooltip
+										>
+											<a
+												href="/dashboard"
+												class="uk-icon-link uk-text-primary"
+												data-uk-icon="icon: refresh"
+											></a>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div
+									class="uk-child-width-1-1@m uk-grid-small uk-grid-match "
+									uk-grid
+								>
+									<%- include("./partials/assignmentsList.ejs", {type:
+									userType}) %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div
+					class="uk-grid uk-grid-small uk-child-width-1-2 uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+					data-uk-lightbox="toggle:a.uk-position-cover"
+					data-uk-grid
+					id="assignmentList"
+				></div> -->
+			</div>
+		</section>
+		<!-- /CONTENT -->
+		<!--FOOTER-->
+		<%- include("./partials/footer.ejs") -%>
+		<!-- OFFCANVAS -->
+		<%- include("./partials/studentOffcanvas.ejs") %>
+		<!-- /OFFCANVAS -->
+		<!-- MODALS -->
+        <%- include("./partials/submissionModal.ejs") %>
+        <% if (userType === "Teacher") { %>
+            <%- include("./partials/submissionsList.ejs") %>
+        <% } %>
+        
+        <!-- Include unit.js for submission functionality -->
+        <script src="/js/unit.js"></script>
+
+		<div id="modal-center1" class="uk-flex-top" data-uk-modal>
+			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical card">
+				<button
+					class="uk-modal-close-default"
+					type="button"
+					data-uk-close
+				></button>
+
+				<h1>New Action</h1>
+			</div>
+		</div>
+
+		<!-- /MODALS -->
+
+		<!-- JS FILES -->
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script> -->
+		<script src="../js/uikit.min.js"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script> -->
+		<script src="../js/uikit-icons.min.js"></script>
+
+		<!-- <script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+			crossorigin="anonymous"
+		></script> -->
+		<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+		<script src="../js/sweetAlert.js"></script>
+
+		<script src="/js/assignments.js"></script>
+		<script>
+			function confirmUnenroll(unitId) {
+				if (
+					confirm(
+						"Are you sure you want to unenroll from this unit?"
+					)
+				) {
+					unenrollUnit(unitId);
+				}
+			}
+
+			function unenrollUnit(unitId) {
+				fetch("/students/removeunit", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ unitId: unitId }),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						if (data.success) {
+							window.location.href = "/dashboard";
+							// alert("Unit unenrolled successfully.");
+							// // Optionally, remove the unit from the DOM after successful unenrollment
+							// document
+							// 	.querySelector(`#unit-${unitId}`)
+							// 	.remove();
+						} else {
+							alert("Error: " + data.error);
+						}
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+						alert(
+							"An unexpected error occurred. Please try again."
+						);
+					});
+			}
+		</script>
+	</body>
+</html>

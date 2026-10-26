@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Teachers EduAxis</title>
+		<!-- CSS FILES -->
+		<!-- TODO ADD FAVICON -->
+		<link rel="icon" href="img/ea.ico" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" type="text/css" href="css/cards.css" />
+		<link rel="stylesheet" type="text/css" href="css/message-styles.css" />
+		<link rel="stylesheet" type="text/css" href="../css/uikit.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/dashboard.css" />
+	</head>
+
+	<body>
+		<!--HEADER-->
+		<header id="top-head" class="uk-position-fixed">
+			<div class="uk-container uk-container-expand uk-background-primary">
+				<nav
+					class="uk-navbar uk-light"
+					data-uk-navbar="mode:click; duration: 250"
+				>
+					<div class="uk-navbar-left">
+						<div class="uk-navbar-item uk-hidden@m">
+							<a class="uk-logo" href="#"
+								><img
+									class="custom-logo"
+									src="img/dashboard-logo-white.svg"
+									alt=""
+							/></a>
+						</div>
+						
+					</div>
+					<div class="uk-navbar-right">
+						<ul class="uk-navbar-nav">
+							
+							<% let newMessages; %> <% newMessages =
+							user.messages.filter(themessage => !themessage.read).length %>
+							<li>
+								<a
+									href="#"
+									data-bs-toggle="modal"
+									data-bs-target="#messagesModal"
+									><span
+										data-uk-icon="icon: comments"
+										class="uk-margin-small-right"
+									></span
+									><sup class="badge bg-primary"><%= newMessages %></sup></a
+								>
+							</li>
+							<li>
+								<a
+									href="/logout"
+									data-uk-icon="icon:  sign-out"
+									title="Sign Out"
+									data-uk-tooltip
+								></a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--/HEADER-->
+		<!-- LEFT BAR -->
+		<aside id="left-col" class="uk-light uk-visible@m">
+			<div class="left-logo uk-flex uk-flex-middle">
+				<div>
+					<a class="text-nowrap">
+						<img
+							src="img/ea.png"
+							width="50"
+							class="rounded-circle"
+							alt="Logo"
+						/>
+						EduAxis
+					</a>
+				</div>
+
+				<hr />
+			 
+				<!-- <img class="custom-logo" src="img/dashboard-logo.svg" alt="" /> -->
+			</div>
+			<div class="left-content-box content-box-dark">
+				<img src="img/avatar.svg" alt="" class="uk-border-circle profile-img" />
+				<h4 class="uk-text-center uk-margin-remove-vertical text-light">
+					<%= userName %>
+				</h4>
+
+				<div class="uk-position-relative uk-text-center uk-display-block">
+					<a
+						href="#"
+						class="uk-text-small uk-text-muted uk-display-block uk-text-center"
+						data-uk-icon="icon: triangle-down; ratio: 0.7"
+						><%= userType %>
+					</a>
+					<!-- user dropdown -->
+					<div
+						class="uk-dropdown user-drop"
+						data-uk-dropdown="mode: click; pos: bottom-center; animation: uk-animation-slide-bottom-small; duration: 150"
+					>
+						<ul class="uk-nav uk-dropdown-nav uk-text-left">
+							
+							<li>
+								<a class="uk-button" href="#modal-center" data-uk-toggle>
+									<span
+
+					<!-- New Assignment Modal -->
+					<div class="modal fade" id="addAssignmentModal" tabindex="-1" role="dialog" aria-labelledby="addAssignmentTitle" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+						<div class="modal-content assignment-upload-modal">
+						  <form action="/upload" enctype="multipart/form-data" method="post" id="uploadForm">
+							<div class="modal-header">
+							  <h5 class="modal-title" id="addAssignmentTitle">Upload Assignment</h5>
+							  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+							  <div class="container-fluid">
+								<div class="mb-3">
+								  <label for="unitSelect" class="form-label">Select Unit</label>
+								  <select class="form-select" id="unitSelect">
+									<option value="" selected disabled>Choose a unit</option>
+									<% myUnitsData.forEach(u => { %>
+									  <option value="<%= u._id %>"><%= u.unitName %> (<%= u.unitCode %>)</option>
+									<% }) %>
+								  </select>
+								  <input type="hidden" name="unitId" id="unitIdInput" />
+								</div>
+
+								<div class="mb-3">
+								  <label for="fileInput" class="form-label">Choose a File</label>
+								  <input class="form-control" type="file" id="fileInput" name="file" accept=".txt,.pdf,.doc,.docx" required />
+								  <div class="form-text">Accepted: .txt, .pdf, .doc, .docx</div>
+								</div>
+
+								<div class="mb-3">
+								  <label for="subject" class="form-label">Subject/Topic/Subtopic</label>
+								  <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject" required />
+								</div>
+
+								<div class="mb-3">
+								  <label for="instructions" class="form-label">Details/Instructions</label>
+								  <textarea class="form-control" id="instructions" rows="3" name="Instructions" required></textarea>
+								</div>
+
+								<div class="mb-3">
+								  <label for="deadlineDate" class="form-label">Set Deadline Date</label>
+								  <input type="date" name="deadlineDate" id="deadlineDate" class="form-control" />
+								</div>
+								<div class="mb-3">
+								  <label for="deadlineTime" class="form-label">Set Deadline Time</label>
+								  <input type="time" class="form-control" name="deadlineTime" id="deadlineTime" />
+								</div>
+							  </div>
+							</div>
+							<div class="modal-footer">
+							  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							  <button type="button" onclick="uploadFile()" class="btn btn-primary">Save</button>
+							</div>
+						  </form>
+						</div>
+					  </div>
+					</div>
+										data-uk-icon="icon: settings"
+										class="uk-margin-small-right"
+									></span
+									>Change Password
+								</a>
+							</li>
+							
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="/logout" data-logout
+									><span data-uk-icon="icon: sign-out"></span> Sign Out</a
+								>
+							</li>
+						</ul>
+					</div>
+					<!-- /user dropdown -->
+				</div>
+			</div>
+
+			<div class="left-nav-wrap">
+				<ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+					<li class="uk-nav-header">ACTIONS</li>
+
+					<li>
+						<a href="#UpcomingEvents"
+							><span
+								data-uk-icon="icon: thumbnails"
+								class="uk-margin-small-right"
+							></span
+							>Upcoming Events</a
+						>
+					</li>
+					<li>
+						<a href="#myClasses"
+							><span
+								data-uk-icon="icon: users"
+								class="uk-margin-small-right"
+							></span
+							>My Classes</a
+						>
+					</li>
+					<li>
+						<a href="#myTimetable"
+							><span
+								data-uk-icon="icon: album"
+								class="uk-margin-small-right"
+							></span
+							>My Timetable</a
+						>
+					</li>
+
+					<li>
+						<a
+							href="#myTimetable"
+							data-bs-toggle="modal"
+							data-bs-target="#messagesModal"
+							><span
+								data-uk-icon="icon: comments"
+								class="uk-margin-small-right"
+							></span
+							>Messages
+							<span class="badge bg-primary"><%= newMessages %></span>
+						</a>
+					</li>
+				</ul>
+				<div class="left-content-box uk-margin-top">
+					
+				</div>
+			</div>
+			<div class="bar-bottom">
+				<ul
+					class="uk-subnav uk-flex uk-flex-center uk-child-width-1-5"
+					data-uk-grid
+				>
+					<li>
+						<a
+							href="#"
+							class="uk-icon-link"
+							data-uk-icon="icon: home"
+							title="Home"
+							data-uk-tooltip
+						></a>
+					</li>
+					
+
+					<li>
+						<a
+							href="/logout" data-logout
+							class="uk-icon-link"
+							data-uk-tooltip="Sign out"
+							data-uk-icon="icon: sign-out"
+						></a>
+					</li>
+				</ul>
+			</div>
+		</aside>
+		<!-- /LEFT BAR -->
+		<!-- MODALS -->
+		<!-- Change Password Modal -->
+
+		<%- include("./partials/changePasswordModal.ejs", {theUserType: "teachers"})
+		%>
+
+		<div id="modal-center1" class="uk-flex-top" data-uk-modal>
+			<div
+				class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical card rounded"
+			>
+				<button
+					class="uk-modal-close-default"
+					type="button"
+					data-uk-close
+				></button>
+
+				<div class="container form-container">
+					<h2 class="text-center">Add Subject</h2>
+					<form
+						id="changePasswordForm"
+						method="post"
+						action="/teachers/<%= user._id%>/subjects"
+					>
+						<div class="form-group">
+							<label for="newSubject">New Subject</label>
+							<input
+								type="text"
+								class="form-control"
+								id="newSubject"
+								name="newSubject"
+								placeholder="Enter new Subject"
+								required
+							/>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-block">
+							Add Subject
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div
+			class="modal fade"
+			id="addClassModal"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="modalTitleId"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<form action="/unit" method="post" id="createUnitForm">
+						<div class="modal-header">
+							<h5 class="modal-title" id="modalTitleId">Add Unit</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="form-floating mb-3">
+									<input
+										type="text"
+										class="form-control"
+										name="unitName"
+										id="unitName"
+										placeholder=""
+										required
+										pattern="[A-Za-z\s]+"
+										title="Only letters and spaces are allowed"
+									/>
+									<label for="unitName">Unit Name</label>
+									<div class="invalid-feedback">
+										Unit name can only contain letters and spaces
+									</div>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+										type="text"
+										class="form-control"
+										name="unitCode"
+										id="unitCode"
+										placeholder=""
+										required
+										pattern="[A-Za-z0-9]+"
+										title="Only letters and numbers are allowed"
+									/>
+									<label for="unitCode">Unit Code</label>
+									<div class="invalid-feedback">
+										Unit code can only contain letters and numbers
+									</div>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+										type="text"
+										class="form-control"
+										name="enrollmentKey"
+										id="enrollmentKey"
+										placeholder=""
+									/>
+									<label for="enrollmentKey">Enrollment Key(optional)</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button type="submit" class="btn btn-primary">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Messages Modal -->
+
+		<%- include("./partials/messagesModal.ejs", {newMessages: newMessages,
+		theUserType:"teachers" }) %>
+
+		<!-- CONTENT -->
+		<div id="content" data-uk-height-viewport="expand: true">
+			<%- include("./partials/alerts.ejs", { info: typeof info !== 'undefined' ? info : [], success: typeof success !== 'undefined' ? success : [], error: typeof error !== 'undefined' ? error : [] }) %>
+
+			<div class="uk-container uk-container-expand">
+				<div
+					class="uk-grid uk-grid-divider uk-grid-medium uk-child-width-1-2 uk-child-width-1-4@l uk-child-width-1-5@xl"
+					data-uk-grid
+				>
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:album"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Assignments</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= assignments.length %>
+						</h1>
+						<!-- <div class="uk-text-small">
+							<a
+								class="uk-text-success"
+								data-uk-icon="icon: plus"
+								href="/assignments"
+							>
+								Add an Assignment
+							</a>
+						</div> -->
+						<div class="uk-position-relative uk-text-center uk-display-block">
+							<a
+								href="#"
+								class="uk-text-small uk-text-muted uk-display-block uk-text-center"
+								data-uk-icon="icon: triangle-down; ratio: 0.7"
+								>Add An Assignment
+							</a>
+							<!-- user dropdown -->
+							<div
+								class="uk-dropdown user-drop"
+								data-uk-dropdown="mode: click; pos: bottom-center; animation: uk-animation-slide-bottom-small; duration: 150"
+							>
+								<ul class="uk-nav uk-dropdown-nav uk-text-left">
+									<%myUnitsData.forEach((subject, index)=>{ %>
+									<li class="d-flex flex-row">
+										<form action="/units" method="post">
+											<input
+												type="hidden"
+												name="unitId"
+												value="<%= subject._id %>"
+											/>
+											<button class="btn" type="submit">
+												<%= index+1 %>
+
+												<span data-uk-icon="icon: info"></span>
+												<%= subject.unitName %>
+											</button>
+										</form>
+									</li>
+
+									<% })%> <% if (myUnitsData.length === 0){ %>
+
+									<li>
+										<a href="#modal-center1" data-uk-toggle
+											><span
+												data-uk-icon="icon: plus"
+												class="uk-text-warning"
+											></span>
+											You have <%= myUnitsData.length%> subjects.</a
+										>
+									</li>
+									<% } %>
+									<li class="uk-nav-divider"></li>
+								</ul>
+							</div>
+							<!-- /user dropdown -->
+						</div>
+					</div>
+
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:social"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>My Classes</span
+						>
+
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= myUnitsData.length %>
+						</h1>
+						<div class="uk-position-relative uk-text-center uk-display-block">
+							<a
+								href="#"
+								class="uk-text-small uk-text-muted uk-display-block uk-text-center"
+								data-uk-icon="icon: triangle-down; ratio: 0.7"
+								>View Classes
+							</a>
+							<!-- user dropdown -->
+							<div
+								class="uk-dropdown user-drop"
+								data-uk-dropdown="mode: click; pos: bottom-center; animation: uk-animation-slide-bottom-small; duration: 150"
+							>
+								<ul class="uk-nav uk-dropdown-nav uk-text-left">
+									<%myUnitsData.forEach((subject, index)=>{ %>
+									<li class="d-flex flex-row">
+										<form action="/units" method="post">
+											<input
+												type="hidden"
+												name="unitId"
+												value="<%= subject._id %>"
+											/>
+											<button class="btn" type="submit">
+												<%= index+1 %>
+
+												<span data-uk-icon="icon: info"></span>
+												<%= subject.unitName %>
+											</button>
+										</form>
+									</li>
+
+									<% })%> <% if (myUnitsData.length === 0){ %>
+
+									<li>
+										<a href="#modal-center1" data-uk-toggle
+											><span
+												data-uk-icon="icon: plus"
+												class="uk-text-warning"
+											></span>
+											You have <%= myUnitsData.length%> subjects.</a
+										>
+									</li>
+									<% } %>
+									<li class="uk-nav-divider"></li>
+
+									<li>
+										<a
+											data-bs-toggle="modal"
+											data-bs-target="#addClassModal"
+											data-uk-toggle
+											><span
+												data-uk-icon="icon: plus"
+												class="uk-text-success"
+											></span>
+											Add Class</a
+										>
+									</li>
+								</ul>
+							</div>
+							<!-- /user dropdown -->
+						</div>
+						<!-- <div class="uk-text-small">
+							<a class="uk-text-success" data-uk-icon="icon: triangle-up"></a
+							>View Subjects
+						</div> -->
+					</div>
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:folder"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Timetables</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= timetables.length%>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-warning" data-uk-icon="icon: triangle-down">
+							</span>
+							<a href="#myTimetable">View timetables</a>
+						</div>
+					</div>
+					<!-- <div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:search"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Week Search</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							9.543
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-danger" data-uk-icon="icon: triangle-down">
+								-23%</span
+							>
+							less than last week.
+						</div>
+					</div> -->
+					<div class="uk-visible@xl">
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:users"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Lorem ipsum</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							5.284
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-up">
+								7%</span
+							>
+							more than last week.
+						</div>
+					</div>
+				</div>
+				<hr />
+				<!-- Events -->
+				<%- include("./partials/eventList.ejs") %>
+
+				<!--  -->
+				<div
+					class="uk-grid uk-grid-medium"
+					data-uk-grid
+					uk-sortable="handle: .sortable-icon"
+				>
+					<!-- /panel -->
+					<% function formatDate(dateString) { %> <% const date = new
+					Date(dateString); %> <% const day = date.getUTCDate(); %> <% const
+					month = date.toLocaleString("default", { month: "long" }); %> <% const
+					year = date.getUTCFullYear(); %> <% return `${day}, ${month},
+					${year}`; %> <% } %>
+					<!-- panel -->
+					<div class="uk-width-1-1@l" id="myClasses">
+						<div class="uk-card">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>My Classes</h4>
+									</div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<button class="btn btn-outline-primary">
+											<a
+												href="#"
+												class="uk-icon-link sortable-icon uk-text-success"
+												title="Move"
+												data-uk-tooltip
+												data-uk-icon="icon: move"
+											></a>
+										</button>
+
+										<button class="btn btn-outline-primary">
+											<a
+												class="uk-icon-link uk-text-success"
+												title="Add Class"
+												data-uk-tooltip
+												data-uk-icon="icon: plus"
+												data-bs-toggle="modal"
+												data-bs-target="#addClassModal"
+											></a>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div
+									class="uk-child-width-1-3@m uk-grid-small uk-grid-match"
+									uk-grid
+								>
+									<%- include("./partials/myUnitsList.ejs") %>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /panel -->
+					<!-- panel -->
+					<%- include("./partials/timetableList.ejs") %>
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@l">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Sales Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart2"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+
+					<!-- Table Added  -->
+
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@l">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>Content Table</h4>
+									</div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div>
+									<table class="uk-table uk-table-striped">
+										<thead>
+											<tr>
+												<th>Table Heading</th>
+												<th>Table Heading</th>
+												<th>Table Heading</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Table Data</td>
+												<td>Table Data</td>
+												<td>Table Data</td>
+											</tr>
+											<tr>
+												<td>Table Data</td>
+												<td>Table Data</td>
+												<td>Table Data</td>
+											</tr>
+											<tr>
+												<td>Table Data</td>
+												<td>Table Data</td>
+												<td>Table Data</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+
+					<!-- Added Actions  -->
+
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@l">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Predictions Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart1"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-1 uk-width-1-3@l uk-width-1-2@xl">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Activity Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart3"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@s uk-width-1-3@l uk-width-1-4@xl">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Distribution Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart4"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@s uk-width-1-3@l uk-width-1-4@xl">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Population Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart5"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+				</div>
+				<%- include("./partials/footer.ejs") -%>
+			</div>
+		</div>
+		<!-- /CONTENT -->
+		<!-- OFFCANVAS -->
+		<%- include("./partials/teachersOffcanvas.ejs") %>
+		<!-- /OFFCANVAS -->
+
+		<!-- JS FILES -->
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script> -->
+		<script src="../js/uikit.min.js"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script> -->
+		<script src="../js/uikit-icons.min.js"></script>
+
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script> -->
+		<script src="../js/Chart.min.js"></script>
+
+		<!-- <script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+			crossorigin="anonymous"
+		></script> -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"
+		></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+		<script src="../js/sweetAlert.js"></script>
+		<script src="js/chartScripts.js"></script>
+		<script src="js/teacher.js"></script>
+		<script src="/js/assignments.js"></script>
+		<script src="js/logout.js"></script>
+		<!-- Dynamic Messages System -->
+		<script src="js/messages.js"></script>
+		<script src="js/messageTriggers.js"></script>
+		<script src="js/unit-form.js"></script>
+		<script>
+		  document.addEventListener('change', function(e){
+		    if(e.target && e.target.id === 'unitSelect'){
+		      const hidden = document.getElementById('unitIdInput');
+		      if (hidden) hidden.value = e.target.value;
+		    }
+		  });
+		</script>
+		<!-- jQuery and Bootstrap JS -->
+	</body>
+</html>

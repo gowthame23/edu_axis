@@ -1,0 +1,58 @@
+<% myUnitsData.forEach(async unit=>{ %>
+<form action="/units" method="post">
+	<input type="hidden" name="unitId" value="<%= unit._id %>" />
+	<button class="btn text-start" type="submit">
+		<div class="nature-card">
+			<div class="uk-card uk-card-small uk-card-default">
+				<div class="uk-card-header">
+					<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+						<div class="uk-width-expand" title="Unit Code" data-uk-tooltip>
+							<span class="cat-txt"> <%= unit.unitCode %> </span>
+						</div>
+
+						<div
+							class="uk-width-auto uk-text-right uk-text-muted"
+							title="Members"
+							data-uk-tooltip
+						>
+							<span class="uk-text-success"> 🔴 </span>
+
+							<span class="uk-text-success"> 🟢 </span>
+
+							<span data-uk-icon="icon:users; ratio: 0.8"></span>
+							<%= unit.members.length %>
+						</div>
+					</div>
+				</div>
+				<div class="uk-card-media"></div>
+
+				<div class="uk-card-body">
+					<h6
+						class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+					>
+						<%= unit.unitName%>
+					</h6>
+					<p class="uk-text-small uk-text-muted">Unit Description</p>
+					<p class="uk-text-small uk-text-muted">
+						Created : <%= formatDate(unit.createdAt) %>
+					</p>
+				</div>
+				<div class="uk-card-footer">
+					<div
+						class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle"
+						data-uk-grid
+					>
+						<div
+							class="uk-width-expand uk-text-small"
+							title="Lecturer"
+							data-uk-tooltip
+						>
+							Lec: <%= user.username %>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</button>
+</form>
+<% }) %>

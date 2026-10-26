@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Admin Portal EduAxis</title>
+
+				<link rel="icon" href="img/ea.ico" />
+
+		<link rel="stylesheet" type="text/css" href="css/cards.css" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="../css/uikit.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/dashboard.css" />
+		
+	</head>
+	<body>
+		<header id="top-head" class="uk-position-fixed">
+			<div class="uk-container uk-container-expand uk-background-primary">
+				<nav
+					class="uk-navbar uk-light"
+					data-uk-navbar="mode:click; duration: 250"
+				>
+					<div class="uk-navbar-left">
+						<div class="uk-navbar-item uk-hidden@m">
+							<a class="uk-logo" href="#"
+								><img
+							src="img/ea.png"
+							width="50"
+							class="rounded-circle"
+							alt="Logo"
+						/></a>
+						</div>
+					</div>
+					<div class="uk-navbar-right">
+						<ul class="uk-navbar-nav">
+							
+							<li>
+								<a
+									href="/logout"
+									data-logout
+									data-uk-icon="icon:  sign-out"
+									title="Sign Out"
+									data-uk-tooltip
+								></a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<aside id="left-col" class="uk-light uk-visible@m">
+			<div class="left-logo uk-flex uk-flex-middle">
+				<div>
+					<a class=" text-nowrap">
+						<img
+							src="img/ea.png"
+							width="50"
+							class="rounded-circle"
+							alt="Logo"
+						/>
+						EduAxis
+					</a>
+				</div>
+			</div>
+			<div class="left-content-box content-box-dark">
+				<img src="img/avatar.svg" alt="" class="uk-border-circle profile-img" />
+				<h4 class="uk-text-center uk-margin-remove-vertical text-light">
+					<%= userName %>
+				</h4>
+
+				<div class="uk-position-relative uk-text-center uk-display-block">
+					<a
+						href="#"
+						class="uk-text-small uk-text-muted uk-display-block uk-text-center"
+						data-uk-icon="icon: triangle-down; ratio: 0.7"
+						><%= userType %></a
+					>
+					<div
+						class="uk-dropdown user-drop"
+						data-uk-dropdown="mode: click; pos: bottom-center; animation: uk-animation-slide-bottom-small; duration: 150"
+					>
+						<ul class="uk-nav uk-dropdown-nav uk-text-left">
+							<li>
+								<a href="/logout" data-logout
+									><span data-uk-icon="icon: sign-out"></span> Sign Out</a
+								>
+							</li>
+						</ul>
+					</div>
+					</div>
+			</div>
+
+			<div class="left-nav-wrap">
+				<ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+					<li class="uk-nav-header">ACTIONS</li>
+					<li>
+						<a href="#UpcomingEvents"
+							><span
+								data-uk-icon="icon: thumbnails"
+								class="uk-margin-small-right"
+							></span
+							>Upcoming Events</a
+						>
+					</li>
+
+				
+					<li>
+						<a href="#Lecturers"
+							><span
+								data-uk-icon="icon: users"
+								class="uk-margin-small-right"
+							></span
+							>Lecturers</a
+						>
+					</li>
+					<li>
+						<a href="#StudentList"
+							><span
+								data-uk-icon="icon: users"
+								class="uk-margin-small-right"
+							></span
+							>Students</a
+						>
+					</li>
+
+					
+					<li>
+						<a href="#classes"
+							><span
+								data-uk-icon="icon: thumbnails"
+								class="uk-margin-small-right"
+							></span
+							>Classes</a
+						>
+					</li>
+					<li>
+						<a href="#myTimetable"
+							><span
+								data-uk-icon="icon: folder"
+								class="uk-margin-small-right"
+							></span
+							>Timetables</a
+						>
+					</li>
+					<li class="uk-parent uk-open"> 
+						<a href="#"
+							><span
+								data-uk-icon="icon: folder"
+								class="uk-margin-small-right"
+							></span
+							>Financial</a
+						>
+						<ul class="uk-nav-sub">
+							<li>
+								<a title="Fees Structure" href="#feesStructure">Fees structure</a>
+							</li>
+							<li>
+									<a title="Recent Payments" href="#recentPayments">Recent Payments</a>
+							</li>
+							<li>
+								<a title="Set Fee Plan" href="/fees/plan">Set Fee Plan</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			<div class="bar-bottom">
+				<ul
+					class="uk-subnav uk-flex uk-flex-center uk-child-width-1-5"
+					data-uk-grid
+				>
+					<li>
+						<a
+							href="#"
+							class="uk-icon-link"
+							data-uk-icon="icon: home"
+							title="Home"
+							data-uk-tooltip
+						></a>
+					</li>
+					
+					<li>
+						<a
+							href="/logout"
+							class="uk-icon-link"
+							data-uk-tooltip="Sign out"
+							data-uk-icon="icon: sign-out"
+						></a>
+					</li>
+				</ul>
+			</div>
+		</aside>
+		<div id="content" data-uk-height-viewport="expand: true">
+			<%- include("./partials/alerts.ejs", { info: typeof info !== 'undefined' ? info : [], success: typeof success !== 'undefined' ? success : [], error: typeof error !== 'undefined' ? error : [] }) %>
+			<div class="uk-container uk-container-expand">
+				<div
+					class="uk-grid uk-grid-divider uk-grid-medium uk-child-width-1-2 uk-child-width-1-4@l uk-child-width-1-5@xl"
+					data-uk-grid
+				>
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:users"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Students</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= numbers.studentNumbers %>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-down"
+								></span
+							>
+							<a href="#StudentList">View Students</a>
+						</div>
+					</div>
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:users"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Lecturers</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= numbers.teachersNumbers %>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-warning" data-uk-icon="icon: triangle-down"
+								></span
+							>
+							<a href="#Lecturers">View Lecturers</a>
+						</div>
+					</div>
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:thumbnails"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>
+							Classes</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= numbers.classNumbers %>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-down">
+								</span
+							>
+							<a href="#classes">View Classes</a>
+						</div>
+					</div>
+					<div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:folder"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Timetables</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= timetables.length%>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-warning" data-uk-icon="icon: triangle-down">
+								</span
+							>
+							<a href="#myTimetable">View timetables</a>
+						</div>
+					</div>
+					<div >
+						<% let pendingRequests; %>
+						<%pendingRequests = deferments.filter(thisthing => !thisthing.approved).length%>
+
+
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:users"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Leave Requests</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= pendingRequests%>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-down">
+							</span
+							>
+							<a data-bs-toggle="modal"
+							data-bs-target="#defermentListModal">View Leave Requests</a>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<div id="modal-center" class="uk-flex-top" data-uk-modal>
+					<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+						<form action="/events" method="post" >
+						<button
+								class="uk-modal-close-default"
+								type="button"
+								data-uk-close
+							></button>
+							<div class="mb-3">
+								<label for="title" class="form-label">Title</label>
+								<input
+									type="text"
+									class="form-control"
+									id="title"
+									name="title"
+									required
+									pattern="^(?!\\s*$)(?![0-9\\s]+$).+"
+									title="Title cannot be only numbers"
+								/>
+								<small class="form-text text-muted">Letters or letters+numbers are allowed. Numbers-only titles are not allowed.</small>
+								<span id="titleNumericError" class="text-danger d-none">Title cannot be only numbers</span>
+							</div>
+							<div class="mb-3">
+								<label for="eventDescription" class="form-label"
+									>Description</label
+								>
+								<textarea
+									class="form-control"
+									id="eventDescription"
+									name="description"
+									rows="3"
+									required
+								></textarea>
+							</div>
+							<div class="mb-3">
+								<label for="eventDate" class="form-label">Event Date</label>
+								<input type="date" name="eventDate" id="eventDate" class="form-control" required />
+							</div>
+							<input type="hidden" name="author" value="Admin">
+							<input type="hidden" name="published" value="Today">
+							
+							<div class="mb-3">
+								<button type="submit" class="btn btn-primary w-100 mx-auto">PUBLISH</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="modal-center1" class="uk-flex-top" data-uk-modal>
+					<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+						<form action="/classes" method="post" >
+						<button
+								class="uk-modal-close-default"
+								type="button"
+								data-uk-close
+							>
+						</button>
+							<div class="mb-3">
+								<label for="className" class="form-label"
+									>Lecture hall/Class Name </label
+								>
+								<input
+									type="text"
+									class="form-control"
+									id="className"
+									name="className"
+									required 
+									
+								/>
+								<input type="hidden" name="classCode" value="" id="classCode ">
+							</div>
+							<div class="mb-3"><button type="submit" class="btn btn-primary w-100 mx-auto">Create Class</button></div>
+						</div>
+					</form>
+				</div>
+				<div
+				class="modal fade"
+				id="addLectureModal"
+				tabindex="-1"
+				role="dialog"
+				aria-labelledby="modalTitleId"
+				aria-hidden="true"
+				>
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<form action="/teachers/add" method="post" class="" >
+								<div class="modal-header">
+									<h5 class="modal-title" id="modalTitleId">
+										Add Lecturer
+									</h5>
+									<button
+										type="button"
+										class="btn-close"
+										data-bs-dismiss="modal"
+										aria-label="Close"
+									></button>
+								</div>
+								<div class="modal-body">
+									<div class="container-fluid">
+										
+										<div class="mb-3">
+											<label for="username" class="form-label"
+												>Username *</label
+											>
+											<input
+												type="text"
+												class="form-control"
+												id="username"
+												name="username"
+												required
+												pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9]+$"
+												onchange="validateUsername(this)"
+												placeholder="Letters and numbers only, must include at least one letter"
+											/>
+											<small class="form-text text-muted">Username must contain at least one letter, no spaces allowed</small>
+										</div>
+										<div class="mb-3">
+											<p><strong>NB: </strong>Lecturers are able to change their password from their portal.</p>
+											<label for="password" class="form-label"
+												>First Password *</label
+											>
+											<input
+												type="password"
+												class="form-control"
+												id="password"
+												name="password"
+												required
+												minlength="5"
+												onchange="validatePassword(this)"
+												placeholder="Minimum 5 characters"
+											/>
+											<small class="form-text text-muted">Password must be at least 5 characters long</small>
+											
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button
+									type="button"
+									class="btn btn-secondary"
+									data-bs-dismiss="modal"
+									>
+									Close
+								</button>
+									<button type="submit" class="btn btn-primary">Save</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div
+				class="modal fade"
+				id="addStudentModal"
+				tabindex="-1"
+				role="dialog"
+				aria-labelledby="modalTitleId"
+				aria-hidden="true"
+				>
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<form action="/students/add" method="post" class="" >
+								<div class="modal-header">
+									<h5 class="modal-title" id="modalTitleId">
+										Add Student
+									</h5>
+									<button
+										type="button"
+										class="btn-close"
+										data-bs-dismiss="modal"
+										aria-label="Close"
+									></button>
+								</div>
+								<div class="modal-body">
+									<div class="container-fluid">
+										
+										<div class="mb-3">
+											<label for="username" class="form-label"
+												>Username/Registration Number *</label
+											>
+											<input
+												type="text"
+												class="form-control"
+												id="username"
+												name="username"
+												required
+												pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9]+$"
+												onchange="validateUsername(this)"
+												placeholder="Letters and numbers only, must include at least one letter"
+											/>
+											<small class="form-text text-muted">Username must contain at least one letter, no spaces allowed</small>
+										</div>
+										<div class="mb-3">
+											<p><strong>NB: </strong>Students are able to change their password from their portal.</p>
+											<label for="password" class="form-label"
+												>First Password *</label
+											>
+											<input
+												type="password"
+												class="form-control"
+												id="password"
+												name="password"
+												required
+												minlength="5"
+												onchange="validatePassword(this)"
+												placeholder="Minimum 5 characters"
+											/>
+											<small class="form-text text-muted">Password must be at least 5 characters long</small>
+											
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button
+									type="button"
+									class="btn btn-secondary"
+									data-bs-dismiss="modal"
+									>
+									Close
+								</button>
+									<button type="submit" class="btn btn-primary">Save</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div
+					class="modal fade"
+					id="defermentListModal"
+					tabindex="-1"
+					role="dialog"
+					aria-labelledby="modalTitleId"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="modalTitleId">
+									<span
+										class="badge bg-primary"
+										><%= pendingRequests %></span
+									>
+									
+									Leave Requests
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
+							</div>
+							<div class="modal-body">
+								<div class="container-fluid">
+									<div class="list-group d-flex flex-row">
+										<button
+										type="button"
+										class="list-group-item list-group-item-action "
+										onclick="changeDefermentView('all')"
+									>
+										All
+									</button>
+										<button type="button" class="list-group-item list-group-item-action "
+											onclick="changeDefermentView('photo-card')"
+											>
+											<span
+										class="badge bg-primary"><%= pendingRequests %></span>
+									
+											Pending
+										</button>
+										<button type="button" class="list-group-item list-group-item-action "
+											onclick="changeDefermentView('music-card')"
+											>
+											Approved
+										</button>
+									
+									
+									</div>
+									<div id="theDefermentListing">
+										<% deferments.forEach(((teacher)=> {%> 
+										<% let theStat = teacher.approved ? "music-card" : "photo-card"; %>
+										<div class="<%= theStat %> my-2 shadow">
+											<div class="uk-card uk-card-small uk-card-default">
+												<div class="uk-card-header">
+													<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+														<div class="uk-width-expand">
+															<% let theComment = teacher.approved ? "Approved": "Pending"   %>
+															<span class="cat-txt">  <%= theComment %> </span>
+														</div>
+														<div class="uk-width-auto uk-text-right uk-text-muted"  
+														
+														title="At"
+																	data-uk-tooltip>
+															<%let localTimeString = new Date(teacher.createdAt).toLocaleDateString();%>
+		
+															<span data-uk-icon="icon:clock; ratio: 0.8"></span>  <%=localTimeString%>
+														</div>
+													</div>
+												</div>
+												<div class="uk-card-body">
+													<h6 class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"><%= teacher.studentName  %></h6>
+													<p class="uk-text-small uk-text-muted">
+														<%= teacher.reason %>
+													</p>
+													<% if (teacher.approved) { %>
+														<p class="uk-text-small uk-text-muted">
+															Updated On: <%= formatDate(teacher.updatedAt) %>
+														</p>
+													<% } %>
+												</div>
+												<div class="uk-card-footer">
+													<div class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle" data-uk-grid>
+														<div class="uk-width-auto uk-text-right ms-auto">
+															<div class="uk-width-auto">
+																<div class="uk-inline">
+																	<a data-uk-icon="icon:more-vertical"></a>
+																	<div data-uk-dropdown="mode: click; pos:top-right">
+																				<ul class="uk-nav uk-dropdown-nav">
+																			<li class="uk-nav-header text-center">Actions</li>
+																					<% if (!teacher.approved) { %>
+																					<li><a href="#" data-deferment-approve="<%= teacher._id %>"><span data-uk-icon="icon: check; ratio: 0.9"></span> Approve Leave</a></li>
+																						<li>
+																							<a href="#" class="uk-text-danger" data-deferment-reject="<%= teacher._id %>">
+																								<span data-uk-icon="icon: close; ratio: 0.9"></span> Reject Leave
+																							</a>
+																						</li>
+																			<% }else{ %>
+																			<li>
+																				<a href="#" class="uk-text-danger">
+																					<span data-uk-icon="icon: trash; ratio: 0.9"></span>
+																					<form id="deleteReq-<%=teacher._id%>" action="/deferment/delete/<%=teacher._id%>" method="post">
+																						<button
+																						type="button"
+																						class="uk-icon-link btn btn-outline-danger "
+																						title="Delete Request"
+																						data-uk-tooltip
+																						onclick="confirmClassDelete('deleteReq-<%=teacher._id%>')"
+																						>
+																						Delete Request
+																						</button>
+																					</form>
+																				</a>
+																			</li>
+																			<% } %>
+																		</ul>
+																	</div>
+																</div>
+															</div>
+														</div>
+
+																			<!-- Fee Plan Modal -->
+																			<div class="modal fade" id="feePlanModal" tabindex="-1" aria-hidden="true">
+																				<div class="modal-dialog">
+																					<div class="modal-content">
+																						<form action="/fees/plan" method="post">
+																							<div class="modal-header">
+																								<h5 class="modal-title">Set Active Fee Plan</h5>
+																								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																							</div>
+																							<div class="modal-body">
+																									<div class="mb-3">
+																											<label class="form-label">Title</label>
+																											<input type="text" name="title" class="form-control" placeholder="e.g. Semester Fees 2025-10" required />
+																									</div>
+																									<div class="mb-3">
+																											<label class="form-label">Amount</label>
+																											<input type="number" name="amount" min="0" step="0.01" class="form-control" placeholder="e.g. 15000" required />
+																									</div>
+																									<small class="text-muted">Setting a new plan deactivates previous ones and enforces this amount for all payments.</small>
+																							</div>
+																							<div class="modal-footer">
+																								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																								<button type="submit" class="btn btn-primary">Save Plan</button>
+																							</div>
+																						</form>
+																					</div>
+																				</div>
+																			</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<%})) %> 
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<form id="deleteAllDeferments" action="/deferment/delete-all" method="post" class="me-auto">
+									<button
+										type="button"
+										class="btn btn-danger"
+										title="Delete all leave requests"
+										data-uk-tooltip
+										onclick="confirmClassDelete('deleteAllDeferments')"
+									>
+										Delete All
+									</button>
+								</form>
+								<button
+									type="button"
+									class="btn btn-secondary"
+									data-bs-dismiss="modal"
+								>
+									Close
+								</button>
+							
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<script>
+					var defermentListModal = document.getElementById('defermentListModal');
+					const theDefermentListing = document.getElementById("theDefermentListing");
+					
+					function changeDefermentView(theView){
+						const theChildren = theDefermentListing.children;
+					
+						if(theView === "all"){
+							for (let index = 0; index < theChildren.length; index++) {
+								const element = theChildren[index];
+								element.classList.remove("d-none")
+							}
+						}else{
+							for (let index = 0; index < theChildren.length; index++) {
+								const element = theChildren[index];
+								element.classList.toggle("d-none", (!(element.classList.contains(theView))))
+								
+							}
+						}
+					}
+				
+					defermentListModal.addEventListener('show.bs.modal', function (event) {
+						let button = event.relatedTarget;
+						let recipient = button.getAttribute('data-bs-whatever');
+					});
+				</script>
+
+				<section class="uk-section uk-section-muted me-3">
+				<div class="uk-container" id="UpcomingEvents">
+					<h2 class="uk-text-bold">
+						Upcoming Events
+						<a
+							class="uk-button uk-button-default"
+							href="#modal-center"
+							data-uk-toggle
+							>Add Event <span data-uk-icon="icon: plus" class="uk-text-success "></span></a
+						>
+					</h2>
+					<div data-uk-slider="velocity: 5">
+						<div class="uk-position-relative">
+							<div class="uk-slider-container">
+								<ul
+									class="uk-slider-items uk-child-width-1-2@s uk-child-width-1-3@m uk-grid uk-grid-medium"
+									id="eventList"
+								>
+								</ul>
+							</div>
+							<ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>
+							<div class="uk-hidden@m uk-light">
+								<a
+									class="uk-position-center-left uk-position-small uk-text-warning "
+									href="#"
+									data-uk-slidenav-previous
+									data-uk-slider-item="previous"
+								></a>
+								<a
+									class="uk-position-center-right uk-position-small uk-text-warning"
+									href="#"
+									data-uk-slidenav-next
+									data-uk-slider-item="next"
+								></a>
+							</div>
+							<div class="uk-visible@m">
+								<a
+									class="uk-position-center-left-out uk-position-small uk-text-warning"
+									href="#"
+									data-uk-slidenav-previous
+									data-uk-slider-item="previous"
+								></a>
+								<a
+									class="uk-position-center-right-out uk-position-small uk-text-warning"
+									href="#"
+									data-uk-slidenav-next
+									data-uk-slider-item="next"
+								></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				</section>
+			
+				<div
+					class="uk-grid uk-grid-medium "
+					data-uk-grid
+					uk-sortable="handle: .sortable-icon"
+				>
+
+				<div class="uk-width-1-1@l my-4" id="Lecturers" >
+					<div class="uk-card">
+						<div class="uk-card-header">
+							<div class="uk-grid uk-grid-small">
+								<div class="uk-width-auto">
+									<h4>Lecturers</h4>
+								</div>
+								
+								<div class="uk-width-expand uk-text-right panel-icons">
+									<a
+										href="#"
+										class="uk-icon-link sortable-icon btn btn-outline-primary"
+										title="Move"
+										data-uk-tooltip
+										
+									>
+									<span data-uk-icon="icon: move" class="uk-text-success "></span>
+								</a>
+					
+									<a
+										href="#"
+										class=" btn btn-outline-primary"
+										title="Add Lecturer"
+										data-uk-tooltip
+										data-bs-toggle="modal"
+										data-bs-target="#addLectureModal"
+										
+									><span data-uk-icon="icon: plus" class="uk-text-success "></span></a>
+									<a
+											href="/dashboard"
+											class="uk-icon-link uk-text-success btn btn-outline-primary"
+											title="Refresh"
+											data-uk-tooltip
+										>
+										<span data-uk-icon="icon: refresh" class="uk-text-success "></a>
+									
+								</div>
+							</div>
+						</div>
+						<div>
+							
+							<div
+								class="uk-child-width-1-3@m uk-grid-small uk-grid-match"
+								style="max-height: 50vh; overflow-y: scroll;" 
+								uk-grid
+								id="homeClassCards"
+								
+							>
+							<% allTeachers.forEach(((teacher)=> {%> 
+								<div class="nature-card">
+									<div class="uk-card uk-card-small uk-card-default">
+										<div class="uk-card-header">
+											<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+												<div class="uk-width-expand">
+													<span class="cat-txt">  Lecturer </span>
+												</div>
+												<div class="uk-width-auto uk-text-right uk-text-muted"  
+												
+												title="Joined"
+															data-uk-tooltip>
+													<%let localTimeString = new Date(teacher.createdAt).toLocaleDateString();%>
+
+													<span data-uk-icon="icon:clock; ratio: 0.8"></span>  <%=localTimeString%>
+												</div>
+											</div>
+										</div>
+										<div class="uk-card-body">
+											<h6 class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"><%= teacher.username  %></h6>
+										</div>
+										<div class="uk-card-footer">
+											<div class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle" data-uk-grid>
+											
+												<div class="uk-width-auto uk-text-right ms-auto">
+													<div class="uk-width-auto">
+														<div class="uk-inline">
+															<a data-uk-icon="icon:more-vertical"></a>
+															<div data-uk-dropdown="mode: click; pos:top-right">
+																<ul class="uk-nav uk-dropdown-nav">
+																	<li class="uk-nav-header text-center">Actions</li>
+																	<li>
+																		<a href="#" data-bs-toggle="collapse" data-bs-target="#changeTeacherPwd-<%=teacher._id%>">
+																			<span data-uk-icon="icon: lifesaver; ratio: 0.9"></span> Change Password
+																		</a>
+																		<div id="changeTeacherPwd-<%=teacher._id%>" class="collapse mt-2">
+																			<form action="/teachers/<%=teacher._id%>/password" method="post" class="d-flex gap-2 align-items-center">
+																				<input type="password" class="form-control form-control-sm" name="password" placeholder="New password" required />
+																				<button type="submit" class="btn btn-sm btn-primary">Update</button>
+																			</form>
+																		</div>
+																	</li>
+																	<li>
+																		<a href="#" class="uk-text-danger">
+																			<span data-uk-icon="icon: trash; ratio: 0.9"></span>
+																			<form id="deletelec-<%=teacher._id%>" action="/teachers/delete/<%=teacher._id%>" method="post">
+																				<button
+																				type="button"
+																				class="uk-icon-link btn btn-outline-danger "
+																				title="Remove Lecturer"
+																				data-uk-tooltip
+																				
+																				onclick="confirmClassDelete('deletelec-<%=teacher._id%>')"
+																				>
+																				Delete Lecturer
+																				</button>
+																			</form>
+																		</a>
+																	</li>
+																</ul>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<%})) %> 
+								
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="uk-width-1-1@l my-4" id="StudentList">
+					<div class="uk-card">
+						<div class="uk-card-header">
+							<div class="uk-grid uk-grid-small">
+								<div class="uk-width-auto">
+									<h4>Students</h4>
+								</div>
+								
+								<div class="uk-width-expand uk-text-right panel-icons">
+									<a
+										href="#"
+										class="uk-icon-link sortable-icon btn btn-outline-primary"
+										title="Move"
+										data-uk-tooltip
+										
+									>
+									<span data-uk-icon="icon: move" class="uk-text-success "></span>
+								</a>
+					
+									<a
+										href="#"
+										class=" btn btn-outline-primary"
+										title="Add Student"
+										data-uk-tooltip
+										data-bs-toggle="modal"
+										data-bs-target="#addStudentModal"
+										
+									><span data-uk-icon="icon: plus" class="uk-text-success "></span></a>
+									<a
+											href="/dashboard"
+											class="uk-icon-link uk-text-success btn btn-outline-primary"
+											title="Refresh"
+											data-uk-tooltip
+										>
+										<span data-uk-icon="icon: refresh" class="uk-text-success "></a>
+									
+								</div>
+							</div>
+						</div>
+						<div>
+							
+							<div
+								class="uk-child-width-1-3@m uk-grid-small uk-grid-match"
+								style="max-height: 50vh; overflow-y: scroll;" 
+								uk-grid
+								id="homeClassCards"
+								
+							>
+							<% allStudents.forEach(((student)=> {%> 
+								<div class="nature-card">
+								<div class="uk-card uk-card-small uk-card-default">
+									<div class="uk-card-header">
+										<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+											<div class="uk-width-expand">
+												<span class="cat-txt">  Student </span>
+											</div>
+											<div class="uk-width-auto uk-text-right uk-text-muted"  
+											
+											title="Joined"
+														data-uk-tooltip>
+												<%let localTimeString = new Date(student.createdAt).toLocaleDateString();%>
+
+												<span data-uk-icon="icon:clock; ratio: 0.8"></span>  <%=localTimeString%>
+											</div>
+										</div>
+									</div>
+									<div class="uk-card-body">
+									
+										<h6 class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"><%= student.username  %></h6>
+									</div>
+									<div class="uk-card-footer">
+										<div class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle" data-uk-grid>
+										
+											<div class="uk-width-auto uk-text-right ms-auto">
+												<div class="uk-width-auto">
+													<div class="uk-inline">
+														<a data-uk-icon="icon:more-vertical"></a>
+														<div data-uk-dropdown="mode: click; pos:top-right">
+															<ul class="uk-nav uk-dropdown-nav">
+																<li class="uk-nav-header text-center">Actions</li>
+																<li>
+																	<a href="#" data-bs-toggle="collapse" data-bs-target="#changeStudentPwd-<%=student._id%>">
+																		<span data-uk-icon="icon: lifesaver; ratio: 0.9"></span> Change Password
+																	</a>
+																	<div id="changeStudentPwd-<%=student._id%>" class="collapse mt-2">
+																		<form action="/students/<%=student._id%>/password" method="post" class="d-flex gap-2 align-items-center">
+																			<input type="password" class="form-control form-control-sm" name="password" placeholder="New password" required />
+																			<button type="submit" class="btn btn-sm btn-primary">Update</button>
+																		</form>
+																	</div>
+																</li>
+																<li>
+																	<a href="#" class="uk-text-danger">
+																		<span data-uk-icon="icon: trash; ratio: 0.9"></span>
+																		<form id="deleteStudent-<%=student._id%>" action="/students/delete/<%=student._id%>" method="post">
+																			<button
+																			type="button"
+																			class="uk-icon-link btn btn-outline-danger "
+																			title="Remove Student"
+																			data-uk-tooltip
+																			
+																			onclick="confirmClassDelete('deleteStudent-<%=student._id%>')"
+																			>
+																			Delete Student
+																			</button>
+																		</form>
+																	</a>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+								<%})) %> 
+								
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="uk-width-1-1@l " id="classes" >
+					<div class="uk-card">
+						<div class="uk-card-header">
+							<div class="uk-grid uk-grid-small">
+								<div class="uk-width-auto">
+									<h4>Lecture Rooms/Classes</h4>
+								</div>
+								
+								<div class="uk-width-expand uk-text-right panel-icons">
+									<a
+										href="#"
+										class="uk-icon-link sortable-icon"
+										title="Move"
+										data-uk-tooltip
+										data-uk-icon="icon: move"
+									></a>
+					
+									<a
+										href="#modal-center1"
+										class="uk-icon-link"
+										title="Add Lecture room"
+										data-uk-tooltip
+										data-uk-toggle
+										
+									><span data-uk-icon="icon: plus" class="uk-text-success "></span></a>
+									<a
+											href="/dashboard"
+											class="uk-icon-link uk-text-success"
+											title="Refresh"
+											data-uk-tooltip
+											data-uk-icon="icon: refresh"
+										></a>
+									<a
+										href="#"
+										class="uk-icon-link"
+										title="Close"
+										data-uk-tooltip
+										data-uk-icon="icon: close"
+									></a>
+								</div>
+							</div>
+						</div>
+						<div>
+							
+							<div
+								class="uk-child-width-1-3@m uk-grid-small uk-grid-match"
+								style="max-height: 50vh; overflow-y: scroll;" 
+								uk-grid
+								id="homeClassCards"
+								
+							>
+							<% classes.forEach(((clas)=> {%> 
+								
+									<div class="nature-card">
+										<div class="uk-card uk-card-small uk-card-default ">
+											<div class="uk-card-header">
+												<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+													<div class="uk-width-expand">
+														<span class="cat-txt"> <%= clas.className %> </span>
+													</div>
+													<div class="uk-width-auto uk-text-right uk-text-muted"  
+													
+													title="Date Created"
+																data-uk-tooltip>
+														<% let localTimeString = new Date(clas.createdAt).toLocaleDateString(); %>
+
+														<span data-uk-icon="icon:clock; ratio: 0.8"></span> <%= localTimeString %>
+													</div>
+												</div>
+											</div>
+											<div class="uk-card-footer">
+												<div class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle" data-uk-grid>
+													<div class="uk-width-auto uk-text-right ms-auto">
+													<form id="<%= clas._id %>" action="/classes/delete/<%= clas._id %>" method="post">
+														<button
+														type="button"
+														class="uk-icon-link"
+														title="Remove Class"
+														data-uk-tooltip
+														data-uk-icon="icon: trash"
+														onclick="confirmClassDelete('<%= clas._id %>')"
+														></button>
+													</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								
+								<%})) %> 
+							</div>
+						</div>
+					</div>
+				</div>
+				<%- include("./partials/timetableList.ejs")  %>
+			<%- include("./partials/feeStructureList.ejs")  %>
+
+				<!-- Recent Payments Panel -->
+				<div class="uk-width-1-1@l" id="recentPayments">
+					<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+						<div class="uk-card-header">
+							<div class="uk-grid uk-grid-small">
+								<div class="uk-width-auto d-flex align-items-center gap-2">
+									<h4 class="mb-0">Recent Payments</h4>
+									<button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#feePlanModal">Set Fee Plan</button>
+								</div>
+								<div class="uk-width-expand uk-text-right panel-icons d-flex gap-2 align-items-center justify-content-end">
+									<div class="d-flex gap-2 align-items-center">
+										<input type="date" id="paymentsStart" class="form-control form-control-sm" />
+										<input type="date" id="paymentsEnd" class="form-control form-control-sm" />
+										<button id="paymentsFilterBtn" class="btn btn-sm btn-primary">Filter</button>
+										<a id="paymentsCsv" class="btn btn-sm btn-outline-secondary" href="/fees/payments.csv" target="_blank">Download CSV</a>
+									</div>
+									<a href="/dashboard" class="uk-icon-link uk-text-success btn btn-outline-primary" title="Refresh" data-uk-tooltip>
+										<span data-uk-icon="icon: refresh" class="uk-text-success"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="uk-card-body">
+							<% if (feePlan) { %>
+							<div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
+								<div>
+									<strong>Current Plan:</strong> <%= feePlan.title %> — ₹ <%= Number(feePlan.amount).toLocaleString() %>
+								</div>
+								<small class="text-muted">Updated: <%= formatDate(feePlan.updatedAt || feePlan.createdAt) %></small>
+							</div>
+							<% } else { %>
+							<div class="alert alert-warning" role="alert">
+								No active fee plan set. Students cannot pay until you set one. Click "Set Fee Plan" to create.
+							</div>
+							<% } %>
+							<div class="mb-2 d-flex gap-3" id="paymentsSummary">
+								<span class="badge bg-primary">Total: ₹ <span data-total-amount>0</span></span>
+								<span class="badge bg-secondary">Count: <span data-total-count>0</span></span>
+								<span class="badge bg-info text-dark">Students: <span data-unique-students>0</span></span>
+							</div>
+							<div class="table-responsive">
+								<table class="uk-table uk-table-divider uk-table-small">
+									<thead>
+										<tr>
+											<th>Student</th>
+											<th>For</th>
+											<th class="text-end">Amount</th>
+											<th>Method</th>
+											<th>Date</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% if (typeof payments !== 'undefined' && payments.length > 0) { %>
+											<% payments.slice(0, 10).forEach(p => { %>
+												<tr>
+													<td><%= p.studentName %></td>
+													<td><%= p.paymentFor %></td>
+													<td class="text-end">₹ <%= Number(p.amount).toLocaleString() %></td>
+													<td>
+														<% const m = (p.paymentMethod || 'other'); %>
+														<span class="badge <%= m==='card' ? 'bg-success' : (m==='upi' ? 'bg-warning text-dark' : 'bg-secondary') %>"><%= m.toUpperCase() %></span>
+													</td>
+													<td><%= formatDate(p.paymentDate) %></td>
+												</tr>
+											<% }) %>
+										<% } else { %>
+											<tr>
+												<td colspan="5" class="text-center text-muted">No payments recorded yet.</td>
+											</tr>
+										<% } %>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<script>
+				(function(){
+					const start = document.getElementById('paymentsStart');
+					const end = document.getElementById('paymentsEnd');
+					const filterBtn = document.getElementById('paymentsFilterBtn');
+					const csvLink = document.getElementById('paymentsCsv');
+					const totalAmountEl = document.querySelector('[data-total-amount]');
+					const totalCountEl = document.querySelector('[data-total-count]');
+					const uniqueStudentsEl = document.querySelector('[data-unique-students]');
+
+					function updateCsvHref(){
+						const params = new URLSearchParams();
+						if (start.value) params.set('startDate', start.value);
+						if (end.value) params.set('endDate', end.value);
+						csvLink.href = '/fees/payments.csv' + (params.toString() ? ('?' + params.toString()) : '');
+					}
+
+					async function updateSummary(){
+						const params = new URLSearchParams();
+						if (start.value) params.set('startDate', start.value);
+						if (end.value) params.set('endDate', end.value);
+						const res = await fetch('/fees/payments/summary' + (params.toString() ? ('?' + params.toString()) : ''));
+						if (!res.ok) return;
+						const data = await res.json();
+						totalAmountEl.textContent = Number(data.totalAmount || 0).toLocaleString();
+						totalCountEl.textContent = data.count || 0;
+						uniqueStudentsEl.textContent = data.uniqueStudents || 0;
+						updateCsvHref();
+					}
+
+					filterBtn.addEventListener('click', function(){
+						updateSummary();
+					});
+
+					// Initialize on load
+					updateSummary();
+				})();
+				</script>
+			</div>
+				<%- include("./partials/footer.ejs") -%>
+				
+			</div>
+		</div>
+		<%- include("./partials/adminOffcanvas.ejs")  %>
+		<script src="../js/uikit.min.js"></script>
+		<script src="../js/uikit-icons.min.js"></script>
+		<script src="../js/Chart.min.js"></script>
+		<script src="js/chartScripts.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+		<script src="../js/sweetAlert.js"></script>
+		<script src="js/admin.js"></script>
+		<script src="js/logout.js"></script>
+
+		<script>
+		function validateUsername(input) {
+			const username = input.value.trim();
+			const usernamePattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]+$/;
+			
+			if (!usernamePattern.test(username)) {
+				input.setCustomValidity('Username must contain at least one letter and can only contain letters and numbers (no spaces)');
+			} else {
+				input.setCustomValidity('');
+			}
+		}
+
+		function validatePassword(input) {
+			if (input.value.length < 5) {
+				input.setCustomValidity('Password must be at least 5 characters long');
+			} else {
+				input.setCustomValidity('');
+			}
+		}
+
+		// Add event listeners to all username and password fields
+		document.querySelectorAll('input[type="text"][id="username"]').forEach(input => {
+			input.addEventListener('input', () => validateUsername(input));
+		});
+
+		document.querySelectorAll('input[type="password"]').forEach(input => {
+			input.addEventListener('input', () => validatePassword(input));
+		});
+		</script>
+		<script>
+(function(){
+  function todayYMD(){
+    const d=new Date();const m=("0"+(d.getMonth()+1)).slice(-2);const day=("0"+d.getDate()).slice(-2);return d.getFullYear()+"-"+m+"-"+day;
+  }
+  const form=document.querySelector('#modal-center form[action="/events"]');
+  if(!form)return;
+  const titleInput=form.querySelector('#title');
+  const descInput=form.querySelector('#eventDescription');
+  const dateInput=form.querySelector('#eventDate');
+  const authorInput=form.querySelector('input[name="author"]');
+  const publishedInput=form.querySelector('input[name="published"]');
+	const titleError=form.querySelector('#titleNumericError');
+  if(dateInput)dateInput.min=todayYMD();
+	function validateTitle(){
+		const t=(titleInput.value||'').trim().replace(/\s+/g,'');
+		const onlyNums=/^\d+$/.test(t);
+		titleInput.setCustomValidity(onlyNums?'Title cannot be only numbers':'');
+		if(titleError){
+			if(onlyNums){
+				titleError.classList.remove('d-none');
+				titleInput.classList.add('is-invalid');
+			}else{
+				titleError.classList.add('d-none');
+				titleInput.classList.remove('is-invalid');
+			}
+		}
+		return !onlyNums;
+	}
+  function validateDate(){
+    const v=dateInput.value;
+    if(!v){dateInput.setCustomValidity('Event date is required');return false;}
+    const today=new Date();today.setHours(0,0,0,0);
+    const d=new Date(v);d.setHours(0,0,0,0);
+    const ok=d>=today;
+    dateInput.setCustomValidity(ok?'':'Event date must be today or a future date');
+    return ok;
+  }
+  titleInput&&titleInput.addEventListener('input',validateTitle);
+  dateInput&&dateInput.addEventListener('input',validateDate);
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();
+    const vt=validateTitle();
+    const vd=validateDate();
+    if(!form.reportValidity()||!vt||!vd)return;
+    const payload={
+      title:(titleInput.value||'').trim(),
+      description:(descInput.value||'').trim(),
+      eventDate:dateInput.value,
+      author:authorInput?authorInput.value:'Admin',
+      published:publishedInput?publishedInput.value:'Today'
+    };
+    try{
+      const res=await fetch('/events',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(payload)});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok)throw new Error((data&&data.message)||'Failed to publish event');
+      if(typeof getEvents==='function')await getEvents();
+      form.reset();
+      if(dateInput)dateInput.min=todayYMD();
+      try{ if(window.UIkit&&UIkit.modal) UIkit.modal('#modal-center').hide(); }catch(_){}
+      try{ if(window.bootstrap) bootstrap.Modal.getInstance(document.getElementById('modal-center'))?.hide(); }catch(_){}
+      if(window.Swal) Swal.fire({title:'Published',icon:'success',timer:1200,showConfirmButton:false});
+    }catch(err){
+      if(window.Swal) Swal.fire({title:'Error',text:String(err.message||err),icon:'error'});
+    }
+  });
+})();
+</script>
+	</body>
+</html>

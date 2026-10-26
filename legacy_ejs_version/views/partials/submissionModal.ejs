@@ -1,0 +1,29 @@
+<!-- Assignment Submission Modal -->
+<div id="submission-modal" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Submit Assignment</h2>
+        </div>
+
+        <div class="uk-modal-body">
+            <form id="submission-form" enctype="multipart/form-data" onsubmit="event.preventDefault(); submitAssignment();">
+                <div class="uk-margin">
+                    <label class="uk-form-label">Choose File</label>
+                    <div class="uk-form-controls">
+                        <div uk-form-custom="target: true">
+                            <input type="file" name="submission" required accept=".pdf,.doc,.docx,.zip,.rar,.txt">
+                            <input class="uk-input uk-width-large" type="text" placeholder="Click to select file" disabled>
+                        </div>
+                    </div>
+                </div>
+                <p class="uk-text-small uk-text-muted">Allowed files: PDF, DOC, DOCX, ZIP, RAR, TXT (Max 10MB)</p>
+                <div class="uk-margin uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <button class="uk-button uk-button-primary" type="submit">Submit Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

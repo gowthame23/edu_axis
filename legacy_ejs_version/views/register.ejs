@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>EduAxis</title>
+		<link rel="icon" href="img/favicon.ico" />
+		<!-- CSS FILES -->
+	
+		<link
+			href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" type="text/css" href="css/uikit.min.css" />
+	</head>
+	<body
+		class="uk-flex uk-flex-center uk-flex-middle uk-background-muted uk-height-viewport"
+		data-uk-height-viewport
+	>
+		<div
+			class="uk-position-bottom-center uk-position-small uk-visible@m uk-position-z-index"
+		>
+		
+		</div>
+		<div class="uk-width-large uk-padding-small">
+			<div class="uk-text-center uk-margin">
+				<a class="uk-logo">
+					<img style="border-radius: 50%"
+						src="img/ea.png"
+						width="100"
+						class="rounded-circle"
+						alt="Logo"
+					/>
+				</a>
+				<h3>EduAxis</h3>
+			</div>
+			<!-- REGISTER -->
+			<form class="toggle-class" action="/register" method="post">
+				<fieldset class="uk-fieldset">
+					<div class="uk-inline uk-width-1-1">
+						<h2>Register</h2>
+						<span
+							class="uk-form-icon uk-form-icon-flip"
+							data-uk-icon="icon: user"
+						></span>
+					</div>
+				
+					<div
+						class="uk-margin-small d-flex gap-4 rounded-pill p-1 border border-1 border-muted py-2 justify-content-around"
+					>
+						
+						<div class="form-check">
+							<input
+								class="form-check-input"
+								type="radio"
+								value="Admin"
+								name="userType"
+								id="flexRadioDefault1"
+							/>
+							<label class="form-check-label" for="flexRadioDefault1">
+								Admin
+							</label>
+						</div>
+					</div>
+
+					<div class="uk-margin-small">
+						<div class="uk-inline uk-width-1-1">
+							<span
+								class="uk-form-icon uk-form-icon-flip"
+								data-uk-icon="icon: user"
+							></span>
+							<input
+								class="uk-input uk-border-pill"
+								required
+								placeholder="Username"
+								type="text"
+								name="username"
+							/>
+						</div>
+					</div>
+					<div class="uk-margin-small">
+						<div class="uk-inline uk-width-1-1">
+							<span
+								class="uk-form-icon uk-form-icon-flip"
+								data-uk-icon="icon: lock"
+							></span>
+							<input
+								class="uk-input uk-border-pill"
+								required
+								placeholder="Password"
+								type="password"
+								name="password"
+							/>
+						</div>
+					</div>
+
+					<div class="uk-margin-small">
+						<label
+							><input class="uk-checkbox" type="checkbox" /> Keep me logged
+							in</label
+						>
+					</div>
+
+					<% if (messages.length > 0) { %>
+					<div class="uk-text-danger"><%= messages %></div>
+					<% } %>
+
+					<div class="uk-margin-bottom">
+						<button
+							type="submit"
+							class="uk-button uk-button-primary uk-border-pill uk-width-1-1"
+						>
+							Register
+						</button>
+					</div>
+				</fieldset>
+				<div>
+					<p>
+						Already have an account?
+						<a href="/login" class="text-primary">Login</a>
+					</p>
+				</div>
+			</form>
+			
+		</div>
+
+		<!-- JS FILES -->
+		<script src="/js/uikit.min.js"></script>
+		<script src="/js/uikit-icons.min.js"></script>
+	</body>
+</html>

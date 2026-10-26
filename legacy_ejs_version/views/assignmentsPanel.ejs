@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>EduAxis</title>
+		<link rel="icon" href="img/favicon.ico" />
+		<!-- CSS FILES -->
+		<!-- <link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/> -->
+		<link
+			href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" type="text/css" href="css/cards.css" />
+
+		<!-- <link
+			rel="stylesheet"
+			type="text/css"
+			href="https://cdn.jsdelivr.net/npm/uikit@latest/dist/css/uikit.min.css"
+		/> -->
+		<link rel="stylesheet" type="text/css" href="css/uikit.min.css" />
+	</head>
+	<body>
+		<!--HEADER-->
+		<header>
+			<div class="uk-container">
+				<nav class="uk-navbar-transparent" data-uk-navbar>
+					<div class="uk-navbar-left">
+						<a class="uk-navbar-item uk-logo" href="#"
+							>EduAxis
+						</a>
+					</div>
+					<div class="uk-navbar-center uk-visible@m">
+						<ul class="uk-navbar-nav">
+							<li class="uk-active"><a href="#">Albums</a></li>
+							<li>
+								<a href="#"
+									>Collections <span data-uk-icon="icon: triangle-down"></span
+								></a>
+								<div class="uk-navbar-dropdown">
+									<ul class="uk-nav uk-navbar-dropdown-nav">
+										<li><a href="#">Landscape</a></li>
+										<li><a href="#">Nature</a></li>
+										<li><a href="#">Social</a></li>
+										<li><a href="#">Urban</a></li>
+										<li><a href="#">Music</a></li>
+									</ul>
+								</div>
+							</li>
+							<li><a href="#">Most Viewed</a></li>
+						</ul>
+					</div>
+					<div class="uk-navbar-right">
+						<ul class="uk-navbar-nav">
+							<li>
+								<a href="#" data-uk-icon="icon:user"></a>
+								<div class="uk-navbar-dropdown uk-navbar-dropdown-bottom-left">
+									<ul class="uk-nav uk-navbar-dropdown-nav">
+										<li class="uk-nav-header uk-text-small uk-text-primary">
+											YOUR ACCOUNT
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: info"></span> Summary</a
+											>
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: refresh"></span> Edit</a
+											>
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: settings"></span>
+												Configuration</a
+											>
+										</li>
+										<li class="uk-nav-divider"></li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: image"></span> Your
+												Pictures</a
+											>
+										</li>
+										<li class="uk-nav-divider"></li>
+										<li>
+											<a href="/logout"
+												><span data-uk-icon="icon: sign-out"></span> Logout</a
+											>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="uk-hidden@m">
+								<a
+									class="uk-navbar-toggle"
+									data-uk-toggle
+									data-uk-navbar-toggle-icon
+									href="#offcanvas-nav"
+								></a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--/HEADER-->
+
+		<!--HERO-->
+		<section class="uk-section uk-section-large uk-section-secondary">
+			<div class="uk-container uk-container-small uk-text-center">
+				<h1>Assignments</h1>
+				<p class="uk-text-large">
+					Welcome to the assignment panel. You have the ability to upload
+					assignments.
+				</p>
+				<div data-uk-margin>
+					<a
+						class="uk-button uk-button-primary"
+						href="#modal-center1"
+						data-uk-toggle
+						>New Assignment</a
+					>
+					<a
+						class="uk-button uk-button-default"
+						href="#modal-center"
+						data-uk-toggle
+						>Submissions</a
+					>
+					<a
+						class="uk-button uk-button-default"
+						href="/dashboard"
+						data-uk-toggle
+						>Back to Dashboard
+					</a>
+				</div>
+			</div>
+		</section>
+		<!--/HERO-->
+		<!-- INFO -->
+		<!-- <section
+			class="uk-section uk-section-default uk-box-shadow-small uk-section-xsmall"
+		>
+			<div class="uk-container">
+				<div class="uk-grid uk-grid-small uk-flex uk-flex-middle" data-uk-grid>
+					<div class="uk-width-auto">
+						<img
+							src="https://unsplash.it/65/65/?random"
+							alt=""
+							class="uk-border-circle"
+						/>
+					</div>
+					<div class="uk-width-expand">
+						<h4 class="uk-margin-remove">
+							Curabitur consequat lectus a dolor interdum semper.
+						</h4>
+						<i class="uk-text-muted uk-text-small">Created on 12th May 2017</i>
+					</div>
+					<div class="uk-width-1-2 uk-width-1-5@m uk-visible@m">
+						<span
+							class="uk-text-primary"
+							data-uk-icon="icon:calendar; ratio: 0.8"
+						></span
+						><span class="uk-text-small uk-text-muted uk-text-bottom">
+							Member since:</span
+						><br />
+						<span class="uk-text-large uk-text-primary">13th May 2015</span>
+					</div>
+					<div class="uk-width-1-2 uk-width-1-5@m uk-visible@m">
+						<span
+							class="uk-text-success"
+							data-uk-icon="icon:user; ratio: 0.8"
+						></span
+						><span class="uk-text-small uk-text-muted uk-text-bottom">
+							Last Login:</span
+						><br />
+						<span class="uk-text-large uk-text-success">18th Feb 2017</span>
+					</div>
+
+					<div class="uk-width-auto@m uk-visible@m">
+						<a class="uk-button uk-button-default" href="/dashboard"
+							>Back to Dashboard</a
+						>
+					</div>
+				</div>
+			</div>
+		</section> -->
+		<!-- /INFO -->
+
+		<!-- CONTENT -->
+
+		<section class="uk-section uk-section-muted">
+			<div class="uk-container">
+				<div
+					class="uk-grid uk-grid-small uk-child-width-1-2 uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+					data-uk-lightbox="toggle:a.uk-position-cover"
+					data-uk-grid
+				>
+					<%- include("./partials/assignmentsList.ejs",{assignments:
+					assignments}) %>
+				</div>
+				<!-- <div
+					class="uk-grid uk-grid-small uk-child-width-1-2 uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+					data-uk-lightbox="toggle:a.uk-position-cover"
+					data-uk-grid
+					id="assignmentList"
+				></div> -->
+			</div>
+		</section>
+		<!-- /CONTENT -->
+		<!--FOOTER-->
+		<%- include("./partials/footer.ejs") -%>
+		<!-- OFFCANVAS -->
+		<div id="offcanvas-nav" data-uk-offcanvas="flip: true; overlay: true">
+			<div
+				class="uk-offcanvas-bar uk-offcanvas-bar-animation uk-offcanvas-slide"
+			>
+				<button
+					class="uk-offcanvas-close uk-close uk-icon"
+					type="button"
+					data-uk-close
+				></button>
+				<ul class="uk-nav uk-nav-default">
+					<li class="uk-active"><a href="#">Active</a></li>
+					<li class="uk-parent">
+						<a href="#">Parent</a>
+						<ul class="uk-nav-sub">
+							<li><a href="#">Sub item</a></li>
+							<li><a href="#">Sub item</a></li>
+						</ul>
+					</li>
+					<li class="uk-nav-header">Header</li>
+					<li>
+						<a href="#js-options"
+							><span
+								class="uk-margin-small-right uk-icon"
+								data-uk-icon="icon: table"
+							></span>
+							Item</a
+						>
+					</li>
+					<li>
+						<a href="#"
+							><span
+								class="uk-margin-small-right uk-icon"
+								data-uk-icon="icon: thumbnails"
+							></span>
+							Item</a
+						>
+					</li>
+					<li class="uk-nav-divider"></li>
+					<li>
+						<a href="#"
+							><span
+								class="uk-margin-small-right uk-icon"
+								data-uk-icon="icon: trash"
+							></span>
+							Item</a
+						>
+					</li>
+				</ul>
+				<h3>Title</h3>
+				<p>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+					eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+					minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+					aliquip ex ea commodo consequat.
+				</p>
+			</div>
+		</div>
+		<!-- /OFFCANVAS -->
+		<!-- MODALS -->
+		<div id="modal-center" class="uk-flex-top" data-uk-modal>
+			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+				<button
+					class="uk-modal-close-default"
+					type="button"
+					data-uk-close
+				></button>
+				<p>
+					Elvis ipsum dolor sit amet, consectetur adipiscing elit, sed do
+					eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+					minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+					aliquip ex ea commodo consequat. Duis aute irure dolor in
+					reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+					pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+					culpa qui officia deserunt mollit anim id est laborum.
+				</p>
+			</div>
+		</div>
+		<div id="modal-center1" class="uk-flex-top" data-uk-modal>
+			<div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical card">
+				<button
+					class="uk-modal-close-default"
+					type="button"
+					data-uk-close
+				></button>
+
+				<h1>Upload Assignment</h1>
+				<form id="uploadForm">
+					<div class="mb-3">
+						<label for="fileInput" class="form-label">
+							Choose a File (It should be named clearly. Include class and
+							subject)
+						</label>
+						<input
+							class="form-control"
+							type="file"
+							id="fileInput"
+							name="file"
+							accept=".txt,.pdf,.doc,.docx"
+							required
+						/>
+					</div>
+
+					<div class="mb-3">
+						<label for="subject" class="form-label"
+							>Subject/Topic/Subtopic</label
+						>
+						<input
+							type="text"
+							name="subject"
+							class="form-control"
+							id="subject"
+							placeholder="Subject"
+							required
+						/>
+					</div>
+					<div class="mb-3">
+						<label for="Instructions" class="form-label"
+							>Details/Instructions</label
+						>
+						<textarea
+							class="form-control"
+							id="instructions"
+							rows="3"
+							name="Instructions"
+							required
+						></textarea>
+					</div>
+					<div class="mb-3">
+						<select
+							class="form-select"
+							aria-label="Default select example"
+							name="AsClass"
+							id="AsClass"
+						>
+							<option selected>Select a class</option>
+							<% classes.forEach(classItem => { %>
+							<option value="<%= classItem.className %>">
+								<%= classItem.className %>
+							</option>
+							<% }); %>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label for="deadlineDate"> Set Deadline: </label>
+
+						<input
+							type="date"
+							name="deadlineDate"
+							id="deadlineDate"
+							class="form-control"
+						/>
+					</div>
+					<div class="mb-3">
+						<label for="deadlineTime" class="form-label">
+							Set DeadlineTime:
+						</label>
+						<input
+							type="time"
+							class="form-control"
+							name="deadlineTime"
+							id="deadlineTime"
+						/>
+					</div>
+
+					<button
+						type="button"
+						class="btn w-100 btn-primary"
+						onclick="uploadFile()"
+					>
+						Upload
+					</button>
+				</form>
+			</div>
+		</div>
+
+		<!-- /MODALS -->
+
+		<!-- JS FILES -->
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script> -->
+		<script src="../js/uikit.min.js"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script> -->
+		<script src="../js/uikit-icons.min.js"></script>
+
+		<!-- <script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+			crossorigin="anonymous"
+		></script> -->
+		<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+		<script src="../js/sweetAlert.js"></script>
+
+		<script src="/js/assignments.js"></script>
+	</body>
+</html>

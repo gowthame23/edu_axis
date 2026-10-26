@@ -1,0 +1,109 @@
+<!-- Teacher: Submissions List Modal -->
+<div id="submissions-list-modal" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">
+                Submissions
+                <small class="uk-text-muted">for <span id="submissions-assignment-title">this assignment</span></small>
+            </h3>
+        </div>
+
+        <div class="uk-modal-body">
+            <div id="no-submissions-alert" class="uk-alert-warning" uk-alert hidden>
+                <p>No submissions yet for this assignment.</p>
+            </div>
+
+            <div class="uk-overflow-auto">
+                <table class="uk-table uk-table-divider uk-table-small uk-table-middle">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Username</th>
+                            <th>File</th>
+                            <th>Submitted At</th>
+                            <th>Status / Grade</th>
+                            <th class="uk-text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissions-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Grade Submission Modal -->
+<div id="grade-modal" class="uk-modal-container" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">Grade Submission</h3>
+        </div>
+
+        <form id="grade-form">
+            <input type="hidden" id="submission-id" />
+            <div class="uk-modal-body">
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="grade-input">Grade *</label>
+                    <div class="uk-form-controls">
+                        <input 
+                            class="uk-input" 
+                            id="grade-input" 
+                            type="text" 
+                            pattern="^[0-9]+\/[0-9]+$"
+                            placeholder="e.g., 85/100" 
+                            required 
+                            oninput="validateGrade(this)"
+                            onchange="validateGrade(this)"
+                        />
+                        <small class="uk-text-muted">Format: Points/Total (e.g., 85/100)</small>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="feedback-input">Feedback (Optional)</label>
+                    <div class="uk-form-controls">
+                        <textarea class="uk-textarea" id="feedback-input" rows="4" placeholder="Optional feedback"></textarea>
+                    </div>
+                </div>
+
+                <script>
+                    function validateGrade(input) {
+                        const gradePattern = /^[0-9]+\/[0-9]+$/;
+                        const value = input.value.trim();
+                        
+                        if (!gradePattern.test(value)) {
+                            input.setCustomValidity('Please enter the grade in format: number/number (e.g., 85/100)');
+                            return;
+                        }
+
+                        const [scored, total] = value.split('/').map(Number);
+                        
+                        if (scored > total) {
+                            input.setCustomValidity('Scored points cannot be greater than total points');
+                            return;
+                        }
+                        
+                        if (total === 0) {
+                            input.setCustomValidity('Total points cannot be zero');
+                            return;
+                        }
+
+                        input.setCustomValidity('');
+                    }
+                </script>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                <button class="uk-button uk-button-primary" type="submit">Save Grade</button>
+            </div>
+        </form>
+    </div>
+</div>

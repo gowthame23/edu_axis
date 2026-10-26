@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>EduAxis</title>
+	</head>
+	<body class="unit-panel">
+		<link rel="icon" href="img/favicon.ico" />
+		<!-- Page Styles (moved into body per request) -->
+		<!-- CSS FILES -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" type="text/css" href="/css/cards.css" />
+		<link rel="stylesheet" type="text/css" href="/css/uikit.min.css" />
+		<link rel="stylesheet" type="text/css" href="/css/dashboard.css" />
+		<link rel="stylesheet" type="text/css" href="/css/unit.css" />
+		<!--HEADER-->
+		<header>
+			<div class="uk-container">
+				<nav class="uk-navbar-transparent" data-uk-navbar>
+					<!-- <div class="uk-navbar-left">
+						<a class="uk-navbar-item uk-logo" href="#"
+							>Weststar Technical College. Unit View
+						</a>
+					</div> -->
+					<div class="left-logo uk-flex uk-flex-middle">
+						<div>
+							<a class="text-nowrap">
+								<img style="border-radius: 50%;"
+									src="img/ea.png"
+									width="50"
+									class="rounded-circle"
+									alt="Logo"
+								/>
+								EduAxis
+							</a>
+						</div>
+					</div>
+
+					<div class="uk-navbar-right">
+						<ul class="uk-navbar-nav">
+							<li>
+								<a href="#" data-uk-icon="icon:user"></a>
+								<div class="uk-navbar-dropdown uk-navbar-dropdown-bottom-left">
+									<ul class="uk-nav uk-navbar-dropdown-nav">
+										<li class="uk-nav-header uk-text-small uk-text-primary">
+											YOUR ACCOUNT
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: users"></span> Members</a
+											>
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: refresh"></span> Edit</a
+											>
+										</li>
+										<li>
+											<a href="#"
+												><span data-uk-icon="icon: settings"></span>
+												Configuration</a
+											>
+										</li>
+										<li class="uk-nav-divider"></li>
+										<li>
+											<a
+												href="/unit/delete/<%= Unit._id%>"
+												class="uk-text-danger"
+												><span data-uk-icon="icon: trash"></span>Delete Class</a
+											>
+										</li>
+										<li class="uk-nav-divider"></li>
+										<li>
+											<a href="/logout" data-logout
+												><span data-uk-icon="icon: sign-out"></span> Logout</a
+											>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="uk-hidden@m">
+								<a
+									class="uk-navbar-toggle"
+									data-uk-toggle
+									data-uk-navbar-toggle-icon
+									href="#offcanvas-nav"
+								></a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--/HEADER-->
+		<input
+			type="hidden"
+			name="unitIdValue"
+			id="unitIdValue"
+			value="<%= Unit._id %>"
+		/>
+
+		<!--HERO-->
+	<section class="uk-section uk-section-large uk-section-secondary unit-hero">
+			<div class="uk-container uk-container-small uk-text-center">
+				<h1><%= Unit.unitName %></h1>
+				<h2><%= Unit.unitCode %></h2>
+				<p class="uk-text-large">
+					Welcome to the unit panel. You have the ability to make announcements
+					and upload assignments.
+				</p>
+				<div data-uk-margin>
+					<a
+						class="uk-button uk-button-primary"
+						data-bs-toggle="modal"
+						data-bs-target="#addAssignmentModal"
+						>New Assignment</a
+					>
+
+					<a
+						class="uk-button uk-button-default"
+						type="button"
+						data-bs-toggle="modal"
+						data-bs-target="#addAnnouncementModal"
+					>
+						New Announcement
+					</a>
+					<a
+						class="uk-button uk-button-default"
+						href="/dashboard"
+						data-uk-toggle
+						>Back to Dashboard
+					</a>
+				</div>
+			</div>
+		</section>
+		<!--/HERO-->
+
+		<!-- CONTENT -->
+
+		<section class="uk-section uk-section-muted">
+			<% function formatDate(dateString) { %> <% const date = new
+			Date(dateString); %> <% const day = date.getUTCDate(); %> <% const month =
+			date.toLocaleString("default", { month: "long" }); %> <% const year =
+			date.getUTCFullYear(); %> <% return `${day}, ${month}, ${year}`; %> <% }
+			%>
+			<div class="uk-container">
+				<div
+					class="uk-grid uk-grid-small uk-child-width-1-2 uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+					data-uk-lightbox="toggle:a.uk-position-cover"
+					data-uk-grid
+				></div>
+
+				<div
+					class="uk-grid uk-grid-large"
+					data-uk-grid
+					uk-sortable="handle: .sortable-icon"
+				>
+					<div class="uk-width-1-1@l">
+						<div class="uk-card">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>
+											<span class="badge bg-primary"
+												><%= Unit.announcements.length%></span
+											>
+											Announcements
+										</h4>
+									</div>
+
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<button
+											class="btn btn-outline-primary"
+											title="Move"
+											data-uk-tooltip
+										>
+											<a
+												class="uk-icon-link sortable-icon uk-text-primary"
+												data-uk-icon="icon: move"
+											></a>
+										</button>
+										<button
+											class="btn btn-outline-primary"
+											title="Add Announcement"
+											data-uk-tooltip
+											data-bs-toggle="modal"
+											data-bs-target="#addAnnouncementModal"
+										>
+											<a
+												class="uk-icon-link uk-text-primary"
+												data-uk-icon="icon: plus"
+											>
+											</a>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div
+									class="uk-child-width-1-1@m uk-grid-small uk-grid-match"
+									uk-grid
+								>
+									<!-- The Unit List -->
+									<% Unit.announcements.forEach(announcement=> { %>
+									<div id="announcement-<%= announcement._id%>">
+										<div>
+											<div class="uk-card uk-card-small uk-card-default my-3">
+												<div class="uk-card-header">
+													<div
+														class="uk-grid uk-grid-small uk-text-small"
+														data-uk-grid
+													>
+														<div
+															class="uk-width-expand"
+															title="Class"
+															data-uk-tooltip
+														>
+															<span class="cat-txt"> Alert </span>
+														</div>
+
+														<div
+															class="uk-width-auto uk-text-right uk-text-muted"
+															title="Posted On"
+															data-uk-tooltip
+														>
+															<span
+																data-uk-tooltip="title: Status: Expired "
+																class="uk-text-success"
+															>
+																🔴
+															</span>
+
+															<span
+																data-uk-tooltip="title: Status: Active "
+																class="uk-text-success"
+															>
+																🟢
+															</span>
+
+															<span
+																data-uk-icon="icon:clock; ratio: 0.8"
+															></span>
+															<%= formatDate(announcement.createdAt) %>
+														</div>
+													</div>
+												</div>
+												<div class="uk-card-media"></div>
+
+												<div class="uk-card-body">
+													<h6
+														class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+													>
+														<%= announcement.announcementTitle %>
+													</h6>
+													<p class="uk-text-small uk-text-muted">
+														<%= announcement.announcementDetails %>
+													</p>
+													<p class="uk-text-small uk-text-muted"></p>
+												</div>
+												<div class="uk-card-footer">
+													<div
+														class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle"
+														data-uk-grid
+													>
+														<div
+															class="uk-width-expand uk-text-small"
+															title="Posted"
+															data-uk-tooltip
+														>
+															Posted : <%= formatDate(announcement.createdAt)%>
+														</div>
+
+														<div class="uk-width-auto uk-text-right">
+															<a
+																data-uk-tooltip="title: Delete Announcement"
+																class="uk-icon-link uk-text-danger"
+																data-uk-icon="icon:trash; ratio: 1.2"
+																onclick="deleteAnnouncement('<%= Unit._id %>', '<%= announcement._id %>')"
+															></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<% }) %>
+								</div>
+							</div>
+						</div>
+					</div>
+					<script>
+						function deleteAnnouncement(unitId, id) {
+							fetch(`/unit/delete/${unitId}/${id}`, {
+								method: "GET",
+								headers: { "Content-type": "application/json" },
+							})
+								.then((response) => response.json())
+								.then((data) => {
+									if (data.success) {
+										alert(data.message); // You can update the UI instead of an alert
+										// Optionally, remove the deleted announcement from the DOM
+										document.querySelector(`#announcement-${id}`).remove();
+									} else {
+										alert(data.message); // Show error message if failed
+									}
+								})
+								.catch((error) => console.error("Error:", error));
+						}
+
+						function confirmDeleteUnit() {
+							Swal.fire({
+								title: "Are you sure?",
+								text: "You won't be able to revert this!",
+								icon: "warning",
+								showCancelButton: true,
+								confirmButtonColor: "#3085d6",
+								cancelButtonColor: "#d33",
+								confirmButtonText: "Yes, delete it!",
+							}).then((result) => {
+								if (result.isConfirmed) {
+									const { value } = document.getElementById("unitIdValue");
+
+									fetch(`/unit/delete/${value}`, {
+										method: "GET",
+									});
+								}
+							});
+						}
+					</script>
+					<div class="uk-width-1-1@l">
+						<div class="uk-card">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>
+											<span class="badge bg-primary">
+												<%= Unit.assignments.length%>
+											</span>
+											Assignments/Cat
+										</h4>
+									</div>
+
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<button
+											class="btn btn-outline-primary"
+											title="Move"
+											data-uk-tooltip
+										>
+											<a
+												class="uk-icon-link sortable-icon uk-text-primary"
+												data-uk-icon="icon: move"
+											></a>
+										</button>
+										<button
+											class="btn btn-outline-primary"
+											title="Add Assignment"
+											data-uk-tooltip
+											data-bs-toggle="modal"
+											data-bs-target="#addAssignmentModal"
+										>
+											<a
+												class="uk-icon-link uk-text-primary"
+												data-uk-icon="icon: plus"
+											>
+											</a>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div
+									class="uk-child-width-1-1@m uk-grid-small uk-grid-match"
+									uk-grid
+								>
+									<%- include("./partials/assignmentsList.ejs", {type:
+									"Teacher"}) %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- /CONTENT -->
+		<!--FOOTER-->
+		<%- include("./partials/footer.ejs") -%>
+
+		<!-- OFFCANVAS -->
+		<%- include("./partials/teachersOffcanvas.ejs") %>
+		<!-- /OFFCANVAS -->
+		<!-- MODALS -->
+		<%- include("./partials/submissionsList.ejs") %>
+
+		<div
+			class="modal fade"
+			id="addAnnouncementModal"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="modalTitleId"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<form action="/unit/announcement" method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="modalTitleId">New Announcement</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="form-floating mb-3">
+									<input type="hidden" name="unitId" value="<%= Unit._id %>" />
+									<input
+										type="text"
+										class="form-control"
+										name="announcementTitle"
+										id="announcementTitle"
+										placeholder=""
+										required
+										minlength="3"
+									/>
+									<label for="announcementTitle">Title *</label>
+								</div>
+								<div class="form-floating mb-3">
+									<textarea
+										class="form-control"
+										name="announcementDetails"
+										id="announcementDetails"
+										placeholder=""
+										required
+										minlength="10"
+										rows="3"
+										style="height: 100px"
+									></textarea>
+									<label for="announcementDetails">Details</label>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button type="submit" class="btn btn-primary">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var addAnnouncementModal = document.getElementById(
+				"addAnnouncementModal"
+			);
+
+			addAnnouncementModal.addEventListener("show.bs.modal", function (event) {
+				// Button that triggered the modal
+				let button = event.relatedTarget;
+				// Extract info from data-bs-* attributes
+				let recipient = button.getAttribute("data-bs-whatever");
+
+				// Use above variables to manipulate the DOM
+			});
+		</script>
+		<!-- Modal -->
+		<div
+			class="modal fade"
+			id="addAssignmentModal"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="modalTitleId"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content assignment-upload-modal">
+					<form
+						action="/upload"
+						enctype="multipart/form-data"
+						method="post"
+						id="uploadForm"
+					>
+						<div class="modal-header">
+							<h5 class="modal-title" id="modalTitleId">Upload Assignment</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="mb-3">
+									<label for="fileInput" class="form-label">
+										Choose a File
+									</label>
+									<input
+										class="form-control"
+										type="file"
+										id="fileInput"
+										name="file"
+										accept=".txt,.pdf,.doc,.docx"
+										required
+									/>
+									<div class="form-text">Accepted: .txt, .pdf, .doc, .docx</div>
+									<input
+										type="hidden"
+										name="unitId"
+										value="<%= Unit._id %>"
+										id="unitIdInput"
+									/>
+								</div>
+
+								<div class="mb-3">
+									<label for="subject" class="form-label"
+										>Subject/Topic/Subtopic</label
+									>
+									<input
+										type="text"
+										name="subject"
+										class="form-control"
+										id="subject"
+										placeholder="Subject"
+										required
+									/>
+								</div>
+								<div class="mb-3">
+									<label for="Instructions" class="form-label"
+										>Details/Instructions</label
+									>
+									<textarea
+										class="form-control"
+										id="instructions"
+										rows="3"
+										name="Instructions"
+										required
+									></textarea>
+								</div>
+								<!-- <div class="mb-3">
+									<select
+										class="form-select"
+										aria-label="Default select example"
+										name="AsClass"
+										id="AsClass"
+									>
+										<option selected>Select a class</option>
+
+										<option value="classItem.className">
+											classItem.className
+										</option>
+									</select>
+								</div> -->
+								<div class="mb-3">
+									<label for="deadlineDate"> Set Deadline: </label>
+
+									<input
+										type="date"
+										name="deadlineDate"
+										id="deadlineDate"
+										class="form-control"
+										required
+									/>
+									<style>
+										/* Style for disabled past dates in calendar */
+										input[type="date"]::-webkit-calendar-picker-indicator {
+											cursor: pointer;
+											opacity: 1;
+										}
+										/* Hide the default validation message */
+										input[type="date"]::-webkit-validation-bubble-message {
+											display: none;
+										}
+									</style>
+								</div>
+								<div class="mb-3">
+									<label for="deadlineTime" class="form-label">
+										Set DeadlineTime:
+									</label>
+									<input
+										type="time"
+										class="form-control"
+										name="deadlineTime"
+										id="deadlineTime"
+										required
+									/>
+								</div>
+
+								<script>
+									document.addEventListener('DOMContentLoaded', function() {
+										const deadlineDateInput = document.getElementById('deadlineDate');
+										const deadlineTimeInput = document.getElementById('deadlineTime');
+										
+										// Function to get today's date in YYYY-MM-DD format
+										function getTodayString() {
+											const now = new Date();
+											return now.toISOString().split('T')[0];
+										}
+
+										// Function to check if a date is in the past
+										function isPastDate(dateString) {
+											const today = new Date(getTodayString());
+											const checkDate = new Date(dateString);
+											return checkDate < today;
+										}
+
+										// Handle date input changes
+										deadlineDateInput.addEventListener('input', function(e) {
+											const selectedDate = this.value;
+											
+											if (isPastDate(selectedDate)) {
+												showFlash('error', 'Please select today or a future date');
+												this.value = getTodayString(); // Reset to today
+											}
+										});
+
+										// Initialize with today's date as minimum
+										deadlineDateInput.addEventListener('click', function() {
+											// This ensures the calendar shows today as the minimum selectable date
+											this.min = getTodayString();
+										});
+
+										// Validate both date and time
+										function validateDeadline() {
+											if (!deadlineDateInput.value || !deadlineTimeInput.value) {
+												showFlash('error', 'Please set both date and time for the deadline');
+												return false;
+											}
+
+											const selectedDateTime = new Date(deadlineDateInput.value + 'T' + deadlineTimeInput.value);
+											const now = new Date();
+
+											if (selectedDateTime <= now) {
+												showFlash('error', 'Deadline must be in the future');
+												return false;
+											}
+
+											return true;
+										}
+
+										// Add validation to time input when today is selected
+										deadlineTimeInput.addEventListener('change', function() {
+											if (deadlineDateInput.value === getTodayString()) {
+												const now = new Date();
+												const selectedTime = new Date(deadlineDateInput.value + 'T' + this.value);
+												
+												if (selectedTime <= now) {
+													showFlash('error', 'For today, please select a future time');
+													// Reset to next hour
+													const nextHour = new Date(now.setHours(now.getHours() + 1, 0, 0));
+													this.value = nextHour.toTimeString().slice(0,5);
+												}
+											}
+										});
+
+										// Make validateDeadline available globally
+										window.validateDeadline = validateDeadline;
+									});
+								</script>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button
+								type="button"
+								onclick="return validateDeadline() && uploadFile()"
+								class="btn btn-primary"
+							>
+								Save
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script src="/js/uikit.min.js"></script>
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script> -->
+		<script src="/js/uikit-icons.min.js"></script>
+
+		
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"
+		></script>
+		<script src="/js/sweetAlert.js"></script>
+
+		<script src="/js/assignments.js"></script>
+		<script src="/js/unit.js"></script>
+	</body>
+</html>

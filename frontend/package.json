@@ -1,0 +1,40 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:report": "vitest run --reporter=default --reporter=json --outputFile=test-reports/frontend-test-report.json"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@reduxjs/toolkit": "^2.0.1",
+    "@tailwindcss/vite": "^4.1.15",
+    "axios": "^1.12.2",
+    "chart.js": "^4.5.1",
+    "lucide-react": "^0.546.0",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.66.0",
+    "react-redux": "^9.0.4",
+    "react-router-dom": "^7.9.6",
+    "recharts": "^3.7.0",
+    "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
+    "tailwindcss": "^4.1.15",
+    "yup": "^1.7.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.3",
+    "@vitejs/plugin-react": "^5.0.4",
+    "baseline-browser-mapping": "^2.9.19",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
+  }
+}

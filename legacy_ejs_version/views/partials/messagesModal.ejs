@@ -1,0 +1,237 @@
+<!-- Messages Modal -->
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="messagesModal"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="modalTitleId"
+	aria-hidden="true"
+	data-user-id="<%= user && user._id ? user._id : '' %>"
+	data-user-type="<%= typeof theUserType !== 'undefined' ? theUserType : '' %>"
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalTitleId">
+					<span
+						data-uk-icon="icon: comments"
+						class="uk-margin-small-right"
+					></span
+					>Messages
+				</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid" id="messagesContainer">
+					<!-- Messages will be dynamically loaded here -->
+					<div class="uk-text-center uk-text-muted uk-padding" id="noMessagesPlaceholder">
+						<p>Loading messages...</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+					Close
+				</button>
+				
+				<!-- Dynamic Mark All As Read Button -->
+				<button type="button" class="btn btn-primary" id="markAllAsReadBtn" onclick="markAllMessagesAsRead()" style="display: none;">
+					Mark All As Read
+					<i data-uk-icon="icon: check"></i>
+				</button>
+				
+				<button type="button" class="btn btn-info disabled" id="noNewMessagesBtn">
+					No New Messages
+					<i data-uk-icon="icon: check"></i>
+				</button>
+				
+				<!-- Dynamic Delete All Button -->
+				<button type="button" class="btn btn-danger" id="deleteAllMessagesBtn" onclick="deleteAllMessages()" style="display: none;">
+					Delete All
+					<i data-uk-icon="icon: trash"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Server messages as JSON to avoid JS/EJS mixing issues -->
+<script id="serverMessagesJSON" type="application/json"><%- JSON.stringify((user && user.messages ? user.messages : []).map(function(m){
+	return {
+		id: (m && (m._id || m.id)) || '',
+		title: (m && (m.title || m.message)) || '',
+		read: !!(m && m.read),
+		createdAt: (m && m.createdAt) || new Date().toISOString()
+	};
+})) %></script>
+
+<script>
+	// Include the messages.js script
+	const messagesScript = document.createElement('script');
+	messagesScript.src = '/js/messages.js';
+	document.head.appendChild(messagesScript);
+
+	var messagesModal = document.getElementById("messagesModal");
+
+	// Read server messages from JSON script tag
+	(function(){
+		try {
+			const el = document.getElementById('serverMessagesJSON');
+			window.serverMessages = el ? JSON.parse(el.textContent || '[]') : [];
+		} catch (e) {
+			console.warn('Failed to parse server messages JSON', e);
+			window.serverMessages = [];
+		}
+	})();
+
+	messagesModal.addEventListener("show.bs.modal", function (event) {
+		// Button that triggered the modal
+		let button = event.relatedTarget;
+		// Extract info from data-bs-* attributes
+		let recipient = button.getAttribute("data-bs-whatever");
+
+		// Initialize message manager if not already done
+		if (window.messageManager) {
+			window.messageManager.updateMessageCount();
+		}
+	});
+
+	// Dynamic message functions
+	function markAllMessagesAsRead() {
+		if (window.MessageManager) {
+			window.MessageManager.markAllAsRead();
+			
+			// Send request to server to mark as read (optional - for persistence)
+			const userId = messagesModal?.dataset.userId;
+			const userType = messagesModal?.dataset.userType;
+			
+			fetch(`/${userType}/messages/markasread/${userId}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'same-origin'
+			}).then(res => {
+				if (!res.ok) console.warn('Mark as read not acknowledged');
+			}).catch(error => console.log('Mark as read request failed:', error));
+		}
+	}
+
+	function deleteAllMessages() {
+		if (window.MessageManager) {
+			window.MessageManager.clearAll();
+			
+			// Send request to server to delete messages (optional - for persistence)
+			const userId = messagesModal?.dataset.userId;
+			const userType = messagesModal?.dataset.userType;
+			
+			fetch(`/${userType}/messages/delete/${userId}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'same-origin'
+			}).then(response => {
+				if (response.ok) {
+					console.log('All messages deleted from server');
+				}
+			}).catch(error => {
+				console.log('Delete all messages request failed:', error);
+			});
+		}
+	}
+
+	function deleteMessage(messageId) {
+	const userId = messagesModal?.dataset.userId;
+	const userType = messagesModal?.dataset.userType;
+		const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+
+		if (messageElement) {
+			// Create a backup of the element and its position
+			const elementHeight = messageElement.offsetHeight;
+			const elementClone = messageElement.cloneNode(true);
+			messageElement.style.height = elementHeight + 'px';
+
+			// Start the deletion animation
+			messageElement.style.transition = 'all 0.3s ease';
+			messageElement.style.opacity = '0';
+			messageElement.style.transform = 'translateX(100px)';
+
+			// Delete message from server
+			fetch(`/${userType}/messages/delete/${userId}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'same-origin',
+				body: JSON.stringify({ messageId })
+			})
+			.then(response => {
+				if (response.ok) {
+					// Collapse animation
+					setTimeout(() => {
+						messageElement.style.height = '0';
+						messageElement.style.margin = '0';
+						messageElement.style.padding = '0';
+						
+						// Remove element after collapse animation
+						setTimeout(() => {
+							messageElement.remove();
+							
+							// Update messages count
+							if (window.messageManager) {
+								window.messageManager.updateMessageCount();
+							}
+
+							// Check if there are any messages left
+							const remainingMessages = document.querySelectorAll('.nature-card');
+							if (remainingMessages.length === 0) {
+								// Add "No messages" text with fade-in animation
+								const noMessagesDiv = document.createElement('div');
+								noMessagesDiv.className = 'uk-text-center uk-text-muted uk-padding';
+								noMessagesDiv.innerHTML = '<p>No messages available</p>';
+								noMessagesDiv.style.opacity = '0';
+								document.getElementById('messagesContainer').appendChild(noMessagesDiv);
+								
+								// Fade in the "No messages" text
+								setTimeout(() => {
+									noMessagesDiv.style.transition = 'opacity 0.3s ease';
+									noMessagesDiv.style.opacity = '1';
+								}, 10);
+
+								// Hide delete all button with fade out
+								const deleteAllBtn = document.getElementById('deleteAllMessagesBtn');
+								deleteAllBtn.style.transition = 'opacity 0.3s ease';
+								deleteAllBtn.style.opacity = '0';
+								setTimeout(() => {
+									deleteAllBtn.style.display = 'none';
+								}, 300);
+							}
+						}, 300);
+					}, 300);
+				} else {
+					// Restore element with bounce animation if deletion fails
+					messageElement.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+					messageElement.style.opacity = '1';
+					messageElement.style.transform = 'translateX(0)';
+				}
+			})
+			.catch(error => {
+				console.log('Delete message failed:', error);
+				// Restore element with bounce animation
+				messageElement.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+				messageElement.style.opacity = '1';
+				messageElement.style.transform = 'translateX(0)';
+			});
+		}
+	}
+
+	// Initialize message count on page load
+	document.addEventListener('DOMContentLoaded', function() {
+		setTimeout(() => {
+			if (window.messageManager) {
+				window.messageManager.updateMessageCount();
+			}
+		}, 1000);
+	});
+</script>

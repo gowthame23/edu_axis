@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Students Portal EduAxis</title>
+						<link rel="icon" href="img/ea.ico" />
+
+		<!-- CSS FILES -->
+		<link rel="stylesheet" type="text/css" href="../css/cards.css" />
+
+		
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+
+		<!-- <link
+		rel="stylesheet"
+		type="text/css"
+		href="https://cdn.jsdelivr.net/npm/uikit@latest/dist/css/uikit.min.css"
+		/> -->
+		<link rel="stylesheet" type="text/css" href="../css/uikit.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/dashboard.css" />
+	</head>
+
+	<body>
+		<!--HEADER-->
+		<header id="top-head" class="uk-position-fixed">
+			<div class="uk-container uk-container-expand uk-background-primary">
+				<nav
+					class="uk-navbar uk-light"
+					data-uk-navbar="mode:click; duration: 250"
+				>
+					<div class="uk-navbar-left">
+						<div class="uk-navbar-item uk-hidden@m">
+							<a class="uk-logo" href="#"
+								><img
+									src="img/ea.png"
+									width="50"
+									class="rounded-circle"
+									alt="Logo"
+							/></a>
+						</div>
+
+						
+					</div>
+					<div class="uk-navbar-right">
+						<ul class="uk-navbar-nav">
+							<% let newMessages; %> <% newMessages =
+							user.messages.filter(themessage => !themessage.read).length %>
+							<li>
+								<a
+									href="#"
+									data-bs-toggle="modal"
+									data-bs-target="#messagesModal"
+									><span
+										data-uk-icon="icon: comments"
+										class="uk-margin-small-right"
+									></span
+									><sup class="badge bg-primary"><%= newMessages %></sup></a
+								>
+							</li>
+							<li>
+								<a
+									href="/logout" data-logout
+									data-uk-icon="icon:  sign-out"
+									title="Sign Out"
+									data-uk-tooltip
+								>
+							
+								</a>
+							</li>
+							<li>
+							 
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--/HEADER-->
+
+		<!-- LEFT BAR -->
+		<aside id="left-col" class="uk-light uk-visible@m">
+			<div class="left-logo uk-flex uk-flex-middle">
+				<div>
+					<a class="text-nowrap">
+						<img
+							src="img/ea.png"
+							width="50"
+							class="rounded-circle"
+							alt="Logo"
+						/>
+						EduAxis
+					</a>
+				</div>
+				<!-- <img class="custom-logo" src="img/dashboard-logo.svg" alt="" /> -->
+			</div>
+			<div class="left-content-box content-box-dark">
+				<img src="img/avatar.svg" alt="" class="uk-border-circle profile-img" />
+				<h4 class="uk-text-center uk-margin-remove-vertical text-light">
+					<%= userName %>
+				</h4>
+
+				<div class="uk-position-relative uk-text-center uk-display-block">
+					<a
+						href="#"
+						class="uk-text-small uk-text-muted uk-display-block uk-text-center"
+						data-uk-icon="icon: triangle-down; ratio: 0.7"
+						>Student</a
+					>
+					<!-- user dropdown -->
+					<div
+						class="uk-dropdown user-drop"
+						data-uk-dropdown="mode: click; pos: bottom-center; animation: uk-animation-slide-bottom-small; duration: 150"
+					>
+						<ul class="uk-nav uk-dropdown-nav uk-text-left">
+							
+							<li>
+								<a class="uk-button" href="#modal-center" data-uk-toggle>
+									<span
+										data-uk-icon="icon: settings"
+										class="uk-margin-small-right"
+									></span
+									>Change Password
+								</a>
+							</li>
+
+							<li class="uk-nav-divider"></li>
+							<li>
+								<a href="/logout"
+									><span data-uk-icon="icon: sign-out"></span> Sign Out</a
+								>
+							</li>
+						</ul>
+					</div>
+					<!-- /user dropdown -->
+				</div>
+			</div>
+
+			<div class="left-nav-wrap">
+				<ul class="uk-nav uk-nav-default uk-nav-parent-icon" data-uk-nav>
+					<li class="uk-nav-header">ACTIONS</li>
+
+					<li>
+						<a href="#UpcomingEvents"
+							><span
+								data-uk-icon="icon: thumbnails"
+								class="uk-margin-small-right"
+							></span
+							>Upcoming Events</a
+						>
+					</li>
+					<li>
+						<a href="#myUnits"
+							><span
+								data-uk-icon="icon: album"
+								class="uk-margin-small-right"
+							></span
+							>My Units</a
+						>
+					</li>
+
+					<li>
+						<a href="#myTimetable"
+							><span
+								data-uk-icon="icon: album"
+								class="uk-margin-small-right"
+							></span
+							>My Timetable</a
+						>
+					</li>
+
+					<li>
+						<a href="#mySubmissions"
+							><span
+								data-uk-icon="icon: file-text"
+								class="uk-margin-small-right"
+							></span
+							>My Submissions</a
+						>
+					</li>
+
+					<li>
+						<a
+							href="#myTimetable"
+							data-bs-toggle="modal"
+							data-bs-target="#messagesModal"
+							><span
+								data-uk-icon="icon: comments"
+								class="uk-margin-small-right"
+							></span
+							>Messages
+							<span class="badge bg-primary"><%= newMessages %></span>
+						</a>
+					</li>
+					<!-- <button type="button" class="btn btn-primary btn-lg">Launch</button> -->
+					<li class="uk-parent">
+						<a href="#"
+							><span
+								data-uk-icon="icon: users"
+								class="uk-margin-small-right"
+							></span
+							>Financial</a
+						>
+						<ul class="uk-nav-sub">
+							<li>
+								<a title="Fees Structure" href="#feesStructure"
+									>Fees structure</a
+								>
+							</li>
+							<li>
+								<a title="Payment Portal" href="./payment-portal"
+									>Payment Portal</a
+								>
+							</li>
+							<!-- <li>
+								<a title="Album" href="album.html">Fee Balance</a>
+							</li> -->
+						</ul>
+					</li>
+					<li class="uk-parent">
+						<a href="#"
+							><span
+								data-uk-icon="icon: users"
+								class="uk-margin-small-right"
+							></span
+							>Admission</a
+						>
+						<ul class="uk-nav-sub">
+							<li>
+								<a
+									title="Leave"
+									data-bs-toggle="modal"
+									data-bs-target="#defermentModal"
+									>Leave</a
+								>
+							</li>
+							<li>
+								<a
+									title="Leave Requests"
+									data-bs-toggle="modal"
+									data-bs-target="#defermentRequestModal"
+									>Leave Requests</a
+								>
+							</li>
+
+							<!-- <li>
+								<a title="Album" href="album.html">Fee Balance</a>
+							</li> -->
+						</ul>
+					</li>
+
+					<!-- <li class="uk-parent">
+						<a href="#"
+							><span
+								data-uk-icon="icon: thumbnails"
+								class="uk-margin-small-right"
+							></span
+							>Edit</a
+						>
+						<ul class="uk-nav-sub">
+							<li>
+								<a title="Article" href="article.html">Article</a>
+							</li>
+							<li>
+								<a title="Album" href="album.html">Album</a>
+							</li>
+							<li>
+								<a title="Cover" href="cover.html">Cover</a>
+							</li>
+							<li>
+								<a title="Cards" href="cards.html">Cards</a>
+							</li>
+							<li>
+								<a title="News Blog" href="newsBlog.html">News Blog</a>
+							</li>
+							<li>
+								<a title="Price" href="price.html">Price</a>
+							</li>
+							<li>
+								<a title="Login" href="login.html">Login</a>
+							</li>
+							<li>
+								<a title="Login-Dark" href="login-dark.html">Login - Dark</a>
+							</li>
+						</ul>
+					</li> -->
+				</ul>
+				<div class="left-content-box uk-margin-top">
+					
+				</div>
+			</div>
+			<div class="bar-bottom">
+				<ul
+					class="uk-subnav uk-flex uk-flex-center uk-child-width-1-5"
+					data-uk-grid
+				>
+					<li>
+						<a
+							href="#"
+							class="uk-icon-link"
+							data-uk-icon="icon: home"
+							title="Home"
+							data-uk-tooltip
+						></a>
+					</li>
+					
+					<li>
+						<a
+							href="/logout" data-logout
+							class="uk-icon-link"
+							data-uk-tooltip="Sign out"
+							data-uk-icon="icon: sign-out"
+						></a>
+					</li>
+				</ul>
+			</div>
+		</aside>
+		<!-- /LEFT BAR -->
+
+		<!-- MODALS -->
+
+		<!-- Change Password Modal -->
+
+		<%- include("./partials/changePasswordModal.ejs", {theUserType: "students"})
+		%>
+
+		<!-- Add Unit Modal -->
+		<div
+			class="modal fade"
+			id="addUnitsModal"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="modalTitleId"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header d-flex justify-content-center">
+						<h5 class="modal-title" id="modalTitleId">Add Units</h5>
+
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						<form class="d-flex my-2 my-lg-0">
+							<input
+								class="form-control me-sm-2 shadow rounded-3"
+								type="text"
+								placeholder="Search Units"
+								id="unitSearchInput"
+							/>
+							<button
+								class="btn btn-outline-success my-2 my-sm-0"
+								type="button"
+								id="unitSearchButton"
+							>
+								Search
+							</button>
+							<button
+								class="btn btn-outline-success my-2 my-sm-0 text-nowrap d-none"
+								type="button"
+								disabled
+								id="unitSearchButtonSpinner"
+							>
+								<span
+									class="spinner-border spinner-border-sm"
+									role="status"
+									aria-hidden="true"
+								>
+								</span>
+								Searching
+							</button>
+						</form>
+						<div data-search-alert class="d-none">
+							<div class="alert alert-primary" role="alert">
+								<strong data-search-result-count>Alert</strong> Units Found
+							</div>
+						</div>
+						<div data-search-results></div>
+
+						<template data-unit-template>
+							<div class="uk-card uk-card-small uk-card-default my-2">
+								<div class="uk-card-header">
+									<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+										<div class="uk-width-expand" title="Class" data-uk-tooltip>
+											<span class="cat-txt" data-unit-code>
+												unit.unitCode
+											</span>
+										</div>
+
+										<div
+											class="uk-width-auto uk-text-right uk-text-muted"
+											title="Deadline"
+											data-uk-tooltip
+										>
+											<span
+												data-uk-tooltip="title: Status: Expired "
+												class="uk-text-success"
+											>
+												🔴
+											</span>
+
+											<span
+												data-uk-tooltip="title: Status: Active "
+												class="uk-text-success"
+											>
+												🟢
+											</span>
+
+											<span data-uk-icon="icon:users; ratio: 0.8"></span>
+											<span data-unit-members-count></span>
+										</div>
+									</div>
+								</div>
+								<div class="uk-card-media"></div>
+
+								<div class="uk-card-body">
+									<h6
+										class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+										data-unit-name
+									>
+										unit.unitName
+									</h6>
+									<p class="uk-text-small uk-text-muted">Unit Description</p>
+									<p class="uk-text-small uk-text-muted">
+										Lecturer:
+										<span data-unit-lecturer class="uk-text-secondary"></span>
+									</p>
+									<p class="uk-text-small uk-text-muted" data-unit-creation>
+										Created : unit.createdAt
+									</p>
+								</div>
+								<div class="uk-card-footer">
+									<form method="post" data-unit-enroll>
+										<div
+											class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle"
+											data-uk-grid
+										>
+											<div
+												class="uk-width-expand uk-text-small"
+												title="Lecturer"
+												data-uk-tooltip
+												data-unit-enrollment-key
+											>
+												<input type="hidden" name="unitId" data-unit-unitId />
+												<!-- Lecturer's Name -->
+												<input
+													class="form-control me-sm-2"
+													type="text"
+													placeholder="Enrollment Key"
+													name="enrollmentKey"
+												/>
+											</div>
+
+											<div class="uk-width-auto uk-text-right ms-auto">
+												<button
+													class="btn btn-outline-success my-2 my-sm-0"
+													type="submit"
+												>
+													Enroll Me
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</template>
+						<script>
+							const unitSearchInput =
+								document.getElementById("unitSearchInput");
+							const unitsFound = document.querySelector(
+								"[data-search-results]"
+							);
+							const unitTemplate = document.querySelector(
+								"[data-unit-template]"
+							);
+							const unitSearchButton =
+								document.getElementById("unitSearchButton");
+							const unitSearchButtonSpinner = document.getElementById(
+								"unitSearchButtonSpinner"
+							);
+							const unitSearchAlert = document.querySelector(
+								"[data-search-alert]"
+							);
+
+							unitSearchInput.addEventListener("keyup", async (e) => {
+								const theValue = e.target.value.trim();
+								const theUnitsFound = await getResults(theValue);
+
+								unitsFound.innerHTML = "";
+								theUnitsFound.forEach((unit) => {
+									console.log(unit);
+									const card = unitTemplate.content.cloneNode(true).children[0];
+									const cardUnitCode = card.querySelector("[data-unit-code]");
+									cardUnitCode.textContent = unit.unitCode;
+									const cardUnitMemberCount = card.querySelector(
+										"[data-unit-members-count]"
+									);
+									cardUnitMemberCount.textContent = unit.members.length;
+									const cardUnitName = card.querySelector("[data-unit-name]");
+									cardUnitName.textContent = unit.unitName;
+									const cardUnitCreation = card.querySelector(
+										"[data-unit-creation]"
+									);
+									cardUnitCreation.textContent = formatDate(unit.createdAt);
+									const cardUnitEnroll =
+										card.querySelector("[data-unit-enroll]");
+									cardUnitEnroll.action = `students/addunit`;
+									const cardUnitUnitId =
+										card.querySelector("[data-unit-unitId]");
+									cardUnitUnitId.value = `${unit._id}`;
+									const cardUnitEnrollmentKeyInput = card.querySelector(
+										"[data-unit-enrollment-key]"
+									);
+									cardUnitEnrollmentKeyInput.classList.toggle(
+										"d-none",
+										unit.enrollmentKey === undefined
+									);
+									const cardUnitLecturerName = card.querySelector(
+										"[data-unit-lecturer]"
+									);
+									cardUnitLecturerName.textContent = unit.creatorName;
+									console.log(unit.creatorName);
+
+									unitsFound.appendChild(card);
+								});
+							});
+
+							async function getResults(theValue) {
+								const unitSearchResultCounter = document.querySelector(
+									"[data-search-result-count]"
+								);
+								unitSearchAlert.classList.remove("d-none");
+
+								unitSearchButton.classList.add("d-none");
+								unitSearchButtonSpinner.classList.remove("d-none");
+
+								const searchResponse = await fetch("/unit/search", {
+									method: "POST",
+									body: JSON.stringify({ searchValue: theValue }),
+									headers: { "Content-Type": "application/json" },
+								});
+								const searchData = await searchResponse.json();
+								unitSearchResultCounter.textContent = searchData.length;
+								unitSearchButton.classList.remove("d-none");
+								unitSearchButtonSpinner.classList.add("d-none");
+								return searchData;
+							}
+						</script>
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-dismiss="modal"
+						>
+							Close
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var addUnitsModal = document.getElementById("addUnitsModal");
+
+			addUnitsModal.addEventListener("show.bs.modal", function (event) {
+				// Button that triggered the modal
+
+				let button = event.relatedTarget;
+				// Extract info from data-bs-* attributes
+				let recipient = button.getAttribute("data-bs-whatever");
+
+				// Use above variables to manipulate the DOM
+			});
+		</script>
+
+		<!-- Deferments Modal -->
+		<div
+			class="modal fade"
+			id="defermentModal"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="modalTitleId"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+									<form action="/deferment/save" method="post" data-student-deferment>
+						<div class="modal-header">
+							<h5 class="modal-title" id="modalTitleId">Apply Leave</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<div class="mb-3">
+									<p>
+										Name: <span class="uk-text-bold"><%= user.username %></span>
+									</p>
+								</div>
+								<div class="mb-3">
+									<p>
+										Input details on your Leave request including the
+										semester and reason(optional)
+									</p>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+										type="text"
+										class="form-control"
+										name="reason"
+										id="reason"
+										placeholder=""
+										required
+										pattern="^[A-Za-z\s]{2,}$"
+										title="Comment must be at least 2 characters long and contain only letters and spaces"
+									/>
+									<label for="reason">Comment</label>
+									<div class="invalid-feedback">
+										Comment must be at least 2 characters long and contain only letters and spaces
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+										<button type="submit" class="btn btn-primary">
+								Send Request
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var defermentModal = document.getElementById("defermentModal");
+
+			defermentModal.addEventListener("show.bs.modal", function (event) {
+				// Button that triggered the modal
+				let button = event.relatedTarget;
+				// Extract info from data-bs-* attributes
+				let recipient = button.getAttribute("data-bs-whatever");
+
+				// Use above variables to manipulate the DOM
+			});
+		</script>
+		<script>
+		(function(){
+			const form = document.querySelector('form[data-student-deferment]');
+			if (!form) return;
+			form.addEventListener('submit', async function(e){
+				e.preventDefault();
+				const reasonInput = form.querySelector('input[name="reason"]');
+				const reason = (reasonInput?.value || '').trim();
+
+				// Validate comment
+				if (!reason) {
+					return Swal && Swal.fire ? Swal.fire({ title: 'Reason required', icon: 'warning' }) : alert('Reason required');
+				}
+
+				// Validate pattern
+				if (!/^[A-Za-z\s]{2,}$/.test(reason)) {
+					reasonInput.classList.add('is-invalid');
+					return Swal && Swal.fire ? 
+						Swal.fire({ 
+							title: 'Invalid comment', 
+							text: 'Comment must be at least 2 characters long and contain only letters and spaces',
+							icon: 'warning' 
+						}) : 
+						alert('Comment must be at least 2 characters long and contain only letters and spaces');
+				}
+
+				try {
+					const res = await fetch('/deferment/save', { 
+						method: 'POST', 
+						headers: { 
+							'Content-Type': 'application/json', 
+							'Accept': 'application/json' 
+						}, 
+						body: JSON.stringify({ reason }) 
+					});
+					const data = await res.json().catch(()=>({}));
+					if (!res.ok) throw new Error(data && data.message ? data.message : 'Failed to submit');
+					
+					// On success:
+					form.reset();
+					try { 
+						// Hide the modal
+						bootstrap.Modal.getInstance(document.getElementById('defermentModal'))?.hide();
+						
+						// Show success message using SweetAlert
+						Swal.fire({
+							title: 'Success',
+							text: 'Leave request submitted successfully',
+							icon: 'success',
+							timer: 1500,
+							showConfirmButton: false
+						});
+
+						// Add a message using messageManager
+						if (window.messageManager) {
+							const messageData = {
+								title: 'Leave Request Submitted',
+								message: reason,
+								read: false,
+								createdAt: new Date(),
+								id: `leave-${Date.now()}`
+							};
+							window.messageManager.addMessage(messageData);
+						}
+					} catch {}
+					// Clear any validation states
+					reasonInput.classList.remove('is-invalid');
+					reasonInput.classList.remove('is-valid');
+					// Optimistically add to "Leave Requests" modal list
+					const listGroup = document.querySelector('#defermentRequestModal .list-group');
+					if (listGroup) {
+						const item = document.createElement('div');
+						item.className = 'list-group-item mb-2';
+						const now = new Date();
+						item.innerHTML = `
+							<div class="d-flex w-100 justify-content-between">
+								<h6 class="mb-1"><span class="badge bg-warning text-dark">Pending</span></h6>
+								<small class="text-muted">${now.toLocaleDateString()}</small>
+							</div>
+							<p class="mb-1"><strong>Reason:</strong> ${reason}</p>
+							<small class="text-muted">Submitted by: You</small>
+						`;
+						listGroup.prepend(item);
+					}
+					Swal && Swal.fire ? Swal.fire({ title: 'Request sent', icon: 'success', timer: 1200, showConfirmButton: false }) : alert('Request sent');
+				} catch (err) {
+					Swal && Swal.fire ? Swal.fire({ title: 'Error', text: String(err.message || err), icon: 'error' }) : alert('Error: ' + err.message);
+				}
+			});
+		})();
+		</script>
+
+		<!-- Deferment Requests Modal -->
+		<div
+			class="modal fade"
+			id="defermentRequestModal"
+			tabindex="-1"
+			role="dialog"
+			aria-labelledby="modalTitleId"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalTitleId">Leave Requests</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div class="modal-body">
+						<div class="container-fluid">
+							<% if (studentDeferments && studentDeferments.length > 0) { %>
+								<div class="list-group">
+									<% studentDeferments.forEach(function(deferment) { %>
+										<div class="list-group-item mb-2">
+											<div class="d-flex w-100 justify-content-between">
+												<h6 class="mb-1">
+													<% if (deferment.approved) { %>
+														<span class="badge bg-success">Approved</span>
+													<% } else { %>
+														<span class="badge bg-warning text-dark">Pending</span>
+													<% } %>
+												</h6>
+												<small class="text-muted"><%= formatDate(deferment.createdAt) %></small>
+											</div>
+											<p class="mb-1"><strong>Reason:</strong> <%= deferment.reason %></p>
+											<small class="text-muted">Submitted by: You</small>
+										</div>
+									<% }); %>
+								</div>
+							<% } else { %>
+								<div class="alert alert-info" role="alert">
+									<p class="mb-0">You have no leave requests yet.</p>
+								</div>
+							<% } %>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-secondary"
+							data-bs-dismiss="modal"
+						>
+							Close
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var defermentRequestModal = document.getElementById(
+				"defermentRequestModal"
+			);
+
+			defermentRequestModal.addEventListener("show.bs.modal", function (event) {
+				// Button that triggered the modal
+				let button = event.relatedTarget;
+				// Extract info from data-bs-* attributes
+				let recipient = button.getAttribute("data-bs-whatever");
+
+				// Use above variables to manipulate the DOM
+			});
+		</script>
+
+		<!-- Messages Modal -->
+
+		<%- include("./partials/messagesModal.ejs", {newMessages: newMessages,
+		theUserType:"students"}) %>
+
+		<!-- /MODALS -->
+
+		<% let assignmentCount = classAssignments.filter(assignment =>
+		assignment.AsClass === studentClass).length; %>
+
+		<!-- CONTENT -->
+		<div id="content" data-uk-height-viewport="expand: true">
+			<div class="uk-container uk-container-expand">
+				<%- include("./partials/alerts.ejs", { info: typeof info !== 'undefined' ? info : [], success: typeof success !== 'undefined' ? success : [], error: typeof error !== 'undefined' ? error : [] }) %>
+
+				<div
+					class="uk-grid uk-grid-divider uk-grid-medium uk-child-width-1-2 uk-child-width-1-4@l uk-child-width-1-5@xl justify-content-center"
+					data-uk-grid
+				>
+					<!-- <div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon: album"
+								class="uk-margin-small-right"
+							></span
+							>Active Assignments</span
+						>
+
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= assignmentCount %>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-up"
+								>15%</span
+							>
+							more than last week.
+						</div>
+					</div> -->
+					<!-- <div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:social"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Your Units</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							<%= unitData.length %>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-warning" data-uk-icon="icon: triangle-down"
+								>-15%</span
+							>
+							8 Recommended
+						</div>
+					</div> -->
+					<!-- <div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:clock"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Traffic hours</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							12.00<small class="uk-text-small">PM</small>
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-up">
+								19%</span
+							>
+							more than last week.
+						</div>
+					</div> -->
+					<!-- <div>
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:search"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Week Search</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							9.543
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-danger" data-uk-icon="icon: triangle-down">
+								-23%</span
+							>
+							less than last week.
+						</div>
+					</div> -->
+					<!-- <div class="uk-visible@xl">
+						<span class="uk-text-small"
+							><span
+								data-uk-icon="icon:users"
+								class="uk-margin-small-right uk-text-primary"
+							></span
+							>Lorem ipsum</span
+						>
+						<h1 class="uk-heading-primary uk-margin-remove uk-text-primary">
+							5.284
+						</h1>
+						<div class="uk-text-small">
+							<span class="uk-text-success" data-uk-icon="icon: triangle-up">
+								7%</span
+							>
+							more than last week.
+						</div>
+					</div> -->
+				</div>
+				<hr />
+
+				<!-- Events -->
+				<%- include("./partials/eventList.ejs") %>
+
+				<div
+					class="uk-grid uk-grid-medium"
+					data-uk-grid
+					uk-sortable="handle: .sortable-icon"
+				>
+					<!-- panel -->
+
+					<div class="uk-width-1-1@l">
+						<div class="uk-card" id="myUnits">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>My Units</h4>
+									</div>
+
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<button
+											class="btn btn-outline-primary"
+											title="Move"
+											data-uk-tooltip
+										>
+											<a
+												class="uk-icon-link sortable-icon uk-text-primary"
+												data-uk-icon="icon: move"
+											></a>
+										</button>
+										<button
+											class="btn btn-outline-primary"
+											title="Add Units"
+											data-uk-tooltip
+											data-bs-toggle="modal"
+											data-bs-target="#addUnitsModal"
+										>
+											<a
+												class="uk-icon-link uk-text-primary"
+												data-uk-icon="icon: plus"
+											>
+											</a>
+										</button>
+										<button
+											class="btn btn-outline-primary"
+											title="Refresh"
+											data-uk-tooltip
+										>
+											<a
+												href="/dashboard"
+												class="uk-icon-link uk-text-primary"
+												data-uk-icon="icon: refresh"
+											></a>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div
+									class="uk-child-width-1-3@m uk-grid-small uk-grid-match"
+									uk-grid
+								>
+									<!-- The Unit List -->
+									<% (Array.isArray(unitData) ? unitData : []).forEach(function(unit){ if (!unit || !unit._id) { return; } %>
+									<form action="/units" method="post">
+										<input
+											type="hidden"
+											name="unitId"
+											value="<%= unit._id %>"
+										/>
+										<button type="submit" class="btn text-start">
+											<div class="nature-card">
+												<div class="uk-card uk-card-small uk-card-default my-3">
+													<div class="uk-card-header">
+														<div
+															class="uk-grid uk-grid-small uk-text-small"
+															data-uk-grid
+														>
+															<div
+																class="uk-width-expand"
+																title="Class"
+																data-uk-tooltip
+															>
+																<span class="cat-txt">
+																	<span
+																		data-uk-tooltip="title: Status: Active "
+																		class="uk-text-success"
+																	>
+																		🟢
+																	</span>
+																	<%= unit.unitCode || '' %>
+																</span>
+															</div>
+
+															<div
+																class="uk-width-auto uk-text-right uk-text-muted"
+																title="Deadline"
+																data-uk-tooltip
+															>
+																<span
+																	data-uk-tooltip="title: Status: Expired "
+																	class="uk-text-success"
+																>
+																	🔴
+																</span>
+
+																<span
+																	data-uk-tooltip="title: Status: Active "
+																	class="uk-text-success"
+																>
+																	🟢
+																</span>
+
+																<span
+																	data-uk-icon="icon:clock; ratio: 0.8"
+																></span>
+																<%= unit.createdAt ? formatDate(unit.createdAt) : '' %>
+															</div>
+														</div>
+													</div>
+													<div class="uk-card-media"></div>
+
+													<div class="uk-card-body">
+														<h6
+															class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+														>
+															<%= unit.unitName || '' %>
+														</h6>
+														<p class="uk-text-small uk-text-muted">
+															Unit Description
+														</p>
+														<p class="uk-text-small uk-text-muted">
+															Created : <%= unit.createdAt ? formatDate(unit.createdAt) : '' %>
+														</p>
+													</div>
+													<div class="uk-card-footer">
+														<div
+															class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle"
+															data-uk-grid
+														>
+															<div
+																class="uk-width-expand uk-text-small"
+																title="Lecturer"
+																data-uk-tooltip
+															>
+																<span class="fw-bold">Lec: </span> <%=
+																unit.creatorName || '' %>
+															</div>
+
+															<!-- <div class="uk-width-auto uk-text-right">
+																<a
+																	data-uk-tooltip="title: Download Assignment"
+																	href="/assignments/download/"
+																	target="_blank"
+																	class="uk-icon-link uk-text-primary"
+																	data-uk-icon="icon:download; ratio: 1.5"
+																></a>
+															</div> -->
+														</div>
+													</div>
+												</div>
+											</div>
+										</button>
+									</form>
+									<% }) %>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<% function formatDate(dateString) { %> <% const date = new
+					Date(dateString); %> <% const day = date.getUTCDate(); %> <% const
+					month = date.toLocaleString("default", { month: "long" }); %> <% const
+					year = date.getUTCFullYear(); %> <% return `${day}, ${month},
+					${year}`; %> <% } %>
+					<!-- /panel -->
+					<!-- panel -->
+					<%- include("./partials/timetableList.ejs") %>
+					<!-- /panel -->
+					<!-- panel -->
+					<%- include("./partials/feeStructureList.ejs") %>
+					<!-- /panel -->
+
+					<!-- Student Payments History -->
+					<div class="uk-width-1-1@l" id="myPayments">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>My Payments</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a href="/dashboard" class="uk-icon-link uk-text-success btn btn-outline-primary" title="Refresh" data-uk-tooltip>
+											<span data-uk-icon="icon: refresh" class="uk-text-success"></span>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="table-responsive">
+									<table class="uk-table uk-table-divider uk-table-small">
+										<thead>
+											<tr>
+												<th>For</th>
+												<th class="text-end">Amount</th>
+												<th>Date</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<% if (typeof myPayments !== 'undefined' && myPayments.length > 0) { %>
+												<% myPayments.forEach(p => { %>
+													<tr>
+														<td><%= p.paymentFor %></td>
+														<td class="text-end">₹ <%= Number(p.amount).toLocaleString() %></td>
+														<td><%= formatDate(p.paymentDate) %></td>
+														<td class="text-end">
+															<button class="btn btn-sm btn-outline-danger" data-delete-payment="<%= p._id %>">Delete</button>
+														</td>
+													</tr>
+												<% }) %>
+											<% } else { %>
+												<tr>
+													<td colspan="3" class="text-center text-muted">You have no payments yet.</td>
+												</tr>
+											<% } %>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<script>
+						(function(){
+							document.querySelectorAll('[data-delete-payment]').forEach(btn => {
+								btn.addEventListener('click', async () => {
+									const id = btn.getAttribute('data-delete-payment');
+									if (!confirm('Delete this payment?')) return;
+									btn.disabled = true;
+									try {
+										const res = await fetch('/fees/my-payments/' + id, { method: 'DELETE' });
+										if (!res.ok) {
+											const data = await res.json().catch(()=>({}));
+											alert('Failed to delete: ' + (data.error || res.statusText));
+										} else {
+											window.location.reload();
+										}
+									} catch (e) {
+										alert('Error: ' + e.message);
+									} finally {
+										btn.disabled = false;
+									}
+								});
+							});
+						})();
+						</script>
+					</div>
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@l">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Sales Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart2"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+
+					<!-- Table Added  -->
+
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@l">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto">
+										<h4>Content Table</h4>
+									</div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div>
+									<table class="uk-table uk-table-striped">
+										<thead>
+											<tr>
+												<th>Table Heading</th>
+												<th>Table Heading</th>
+												<th>Table Heading</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Table Data</td>
+												<td>Table Data</td>
+												<td>Table Data</td>
+											</tr>
+											<tr>
+												<td>Table Data</td>
+												<td>Table Data</td>
+												<td>Table Data</td>
+											</tr>
+											<tr>
+												<td>Table Data</td>
+												<td>Table Data</td>
+												<td>Table Data</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+
+					<!-- Added Actions  -->
+
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@l">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Predictions Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart1"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-1 uk-width-1-3@l uk-width-1-2@xl">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Activity Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart3"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@s uk-width-1-3@l uk-width-1-4@xl">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Distribution Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart4"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+					<!-- panel -->
+					<!-- <div class="uk-width-1-2@s uk-width-1-3@l uk-width-1-4@xl">
+						<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small">
+									<div class="uk-width-auto"><h4>Population Chart</h4></div>
+									<div class="uk-width-expand uk-text-right panel-icons">
+										<a
+											href="#"
+											class="uk-icon-link sortable-icon"
+											title="Move"
+											data-uk-tooltip
+											data-uk-icon="icon: move"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Configuration"
+											data-uk-tooltip
+											data-uk-icon="icon: cog"
+										></a>
+										<a
+											href="#"
+											class="uk-icon-link"
+											title="Close"
+											data-uk-tooltip
+											data-uk-icon="icon: close"
+										></a>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-body">
+								<div class="chart-container">
+									<canvas id="chart5"></canvas>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /panel -->
+				</div>
+
+				<!-- My Submissions -->
+				<section class="uk-section uk-section-default" id="mySubmissions">
+					<div class="uk-container">
+						<div class="uk-card uk-card-default uk-card-small">
+							<div class="uk-card-header">
+								<h3 class="uk-card-title">My Submissions</h3>
+							</div>
+							<div class="uk-card-body">
+								<div id="student-submissions-empty" class="uk-alert-warning" uk-alert hidden>
+									<p>You have not submitted any assignments yet.</p>
+								</div>
+								<div class="uk-overflow-auto">
+									<table class="uk-table uk-table-divider uk-table-small uk-table-middle">
+										<thead>
+											<tr>
+												<th>Assignment</th>
+												<th>Submitted At</th>
+												<th>Status</th>
+												<th>Grade</th>
+												<th>Feedback</th>
+											</tr>
+										</thead>
+										<tbody id="student-submissions-body"></tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!--/MODALS  -->
+				<%- include("./partials/footer.ejs") -%>
+
+				<!-- <footer class="uk-section uk-section-small uk-text-center">
+					<hr />
+					<p class="uk-text-small uk-text-center">
+						Copyright 2019 -
+						<a href="https://github.com/zzseba78/Kick-Off"
+							>Created by KickOff</a
+						>
+						| Built with
+						<a
+							href="http://getuikit.com"
+							title="Visit UIkit 3 site"
+							target="_blank"
+							data-uk-tooltip
+							><span data-uk-icon="uikit"></span
+						></a>
+					</p>
+				</footer> -->
+			</div>
+		</div>
+		<!-- /CONTENT -->
+		<!-- OFFCANVAS -->
+		<%- include("./partials/studentOffcanvas.ejs") %>
+		<!-- /OFFCANVAS -->
+
+		<!-- JS FILES -->
+		<script src="../js/uikit.min.js"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script> -->
+		<script src="../js/uikit-icons.min.js"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script> -->
+		<script src="../js/Chart.min.js"></script>
+
+		<!-- <script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+			integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+			crossorigin="anonymous"
+		></script> -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"
+		></script>
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script> -->
+		<script src="js/chartScripts.js"></script>
+		<script src="js/student.js"></script>
+		<script src="js/logout.js"></script>
+		<!-- Dynamic Messages System -->
+		<script src="js/messages.js"></script>
+		<script src="js/messageTriggers.js"></script>
+		<script>
+			async function loadMySubmissions() {
+				try {
+					const res = await fetch('/my-submissions');
+					const data = await res.json();
+					const tbody = document.getElementById('student-submissions-body');
+					const empty = document.getElementById('student-submissions-empty');
+					tbody.innerHTML = '';
+
+					if (!res.ok) throw new Error(data.error || 'Failed to load submissions');
+
+					if (!data || data.length === 0) {
+						empty.hidden = false;
+						return;
+					}
+
+					empty.hidden = true;
+					data.forEach(s => {
+						const tr = document.createElement('tr');
+						tr.innerHTML = `
+							<td>${(s.assignment && s.assignment.title) ? s.assignment.title : '-'}</td>
+							<td>${new Date(s.submissionDate).toLocaleString()}</td>
+							<td>${s.status === 'graded' ? '<span class="uk-label uk-label-success">Graded</span>' : '<span class="uk-label">Submitted</span>'}</td>
+							<td>${s.grade ? s.grade : '-'}</td>
+							<td>${s.feedback ? s.feedback : '-'}</td>
+						`;
+						tbody.appendChild(tr);
+					});
+				} catch (err) {
+					console.error('loadMySubmissions:', err);
+				}
+			}
+			document.addEventListener('DOMContentLoaded', loadMySubmissions);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+
+<% if (typeof info !== 'undefined' && info.length > 0) { %>
+	<% info.forEach(function(msg, idx) { %>
+		<div class="alert alert-primary alert-dismissible fade show" role="alert" id="alert-info-<%= idx %>">
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			<strong>Info:</strong> <%= msg %>
+		</div>
+	<% }); %>
+<% } %>
+
+<% if (typeof success !== 'undefined' && success.length > 0) { %>
+	<% success.forEach(function(msg, idx) { %>
+		<div class="alert alert-success alert-dismissible fade show" role="alert" id="alert-success-<%= idx %>">
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			<strong>Success:</strong> <%= msg %>
+		</div>
+	<% }); %>
+<% } %>
+
+<% if (typeof error !== 'undefined' && error.length > 0) { %>
+	<% error.forEach(function(msg, idx) { %>
+		<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-error-<%= idx %>">
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			<strong>Error:</strong> <%= msg %>
+		</div>
+	<% }); %>
+<% } %>
+
+<script>
+	// Auto-dismiss flash messages after 1.5 seconds
+	document.addEventListener('DOMContentLoaded', function() {
+		const alerts = document.querySelectorAll('.alert-dismissible');
+		alerts.forEach(function(alert) {
+			setTimeout(function() {
+				const bsAlert = new bootstrap.Alert(alert);
+				bsAlert.close();
+			}, 1500);
+		});
+	});
+</script>

@@ -1,0 +1,227 @@
+<div class="uk-width-1-1@l" id="myTimetable">
+	<div class="uk-card uk-card-default uk-card-small uk-card-hover">
+		<div class="uk-card-header">
+			<div class="uk-grid uk-grid-small">
+				<div class="uk-width-auto"><h4>Timetables</h4></div>
+				<div class="uk-width-expand uk-text-right panel-icons">
+					<a
+						href="#"
+						class="uk-icon-link sortable-icon btn btn-outline-primary"
+						title="Move"
+						data-uk-tooltip
+					>
+						<span data-uk-icon="icon: move" class="uk-text-success"></span>
+					</a>
+
+					<% if (userType === "Admin") { %>
+
+					<a
+						href="#"
+						class="btn btn-outline-primary"
+						title="Add Timetable"
+						data-uk-tooltip
+						data-bs-toggle="modal"
+						data-bs-target="#addTimetableModal"
+						><span data-uk-icon="icon: plus" class="uk-text-success"></span
+					></a>
+
+					<% } %>
+					<a
+						href="#"
+						class="uk-icon-link sortable-icon btn btn-outline-primary"
+						title="Close"
+						data-uk-tooltip
+					>
+						<span data-uk-icon="icon: close" class="uk-text-success"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="uk-card-body">
+			<div class="">
+				<div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
+					<!-- The Unit List -->
+					<% timetables.forEach(table=>{ %>
+					<div class="nature-card">
+						<div class="uk-card uk-card-small uk-card-default my-3 shadow">
+							<div class="uk-card-header">
+								<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+									<div class="uk-width-expand" title="Class" data-uk-tooltip>
+										<span class="cat-txt">
+											<span
+												data-uk-tooltip="title: Status: Active "
+												class="uk-text-success"
+											>
+												🟢
+											</span>
+											Timetable
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="uk-card-media"></div>
+
+							<div class="uk-card-body">
+								<h6
+									class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+								>
+									<%= table.title %>
+								</h6>
+								<p class="uk-text-small uk-text-muted">
+									<%= table.description %>
+								</p>
+								<p class="uk-text-small uk-text-muted" title="Updated">
+									Updated : <%= formatDate(table.createdAt) %>
+								</p>
+							</div>
+							<div class="uk-card-footer">
+								<div
+									class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle"
+									data-uk-grid
+								>
+									<div class="uk-width-auto">
+										<img
+											class="uk-border-circle"
+											alt=""
+											width="40"
+											height="40"
+											src="\img\ea.jpg"
+										/>
+									</div>
+									<div
+										class="uk-width-expand uk-text-small"
+										title="Lecturer"
+										data-uk-tooltip
+									>
+										<span class="fw-bold">Admin: </span>
+										<%= table.creator %>
+									</div>
+
+									<div class="uk-width-auto uk-text-right">
+										<a
+											data-uk-tooltip="title: Download Timetable"
+											href="/timetable/download/<%= table._id %>"
+											target="_blank"
+											class="uk-icon-link uk-text-primary"
+											data-uk-icon="icon:download; ratio: 1.5"
+										></a>
+									</div>
+									<% if (userType === "Admin") { %>
+
+									<div class="uk-width-auto uk-text-right">
+										<a
+											data-uk-tooltip="title: Delete Timetable"
+											href="/timetable/delete/<%= table._id %>"
+											class="uk-icon-link uk-text-danger"
+											data-uk-icon="icon:trash; ratio: 1.2"
+										></a>
+									</div>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+					<%}) %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="addTimetableModal"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="modalTitleId"
+	aria-hidden="true"
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form
+				action="/timetable/upload"
+				enctype="multipart/form-data"
+				method="post"
+			>
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitleId">Post Timetable</h5>
+					<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"
+					></button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="mb-3">
+							<label for="timetable" class="form-label"> Choose a File </label>
+							<input
+								class="form-control"
+								type="file"
+								id="timetable"
+								name="timetable"
+								accept=".pdf,.jpg,.jpeg"
+								required
+								onchange="validateFileType(this, 'timetable')"
+							/>
+							<small class="form-text text-muted">Allowed file types: PDF, JPG/JPEG</small>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn btn-secondary"
+						data-bs-dismiss="modal"
+					>
+						Close
+					</button>
+					<button type="submit" class="btn btn-primary" id="timetableUploadBtn">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	var addTimetableModal = document.getElementById("addTimetableModal");
+
+	addTimetableModal.addEventListener("show.bs.modal", function (event) {
+		// Button that triggered the modal
+		let button = event.relatedTarget;
+		// Extract info from data-bs-* attributes
+		let recipient = button.getAttribute("data-bs-whatever");
+
+		// Use above variables to manipulate the DOM
+	});
+
+	function validateFileType(input, type) {
+		const file = input.files[0];
+		const submitBtn = document.getElementById('timetableUploadBtn');
+		
+		if (!file) {
+			return;
+		}
+
+		// Check file size (max 5MB)
+		const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+		if (file.size > maxSize) {
+			alert('File size must be less than 5MB');
+			input.value = '';
+			return;
+		}
+
+		// Check file type
+		const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg'];
+		if (!allowedTypes.includes(file.type)) {
+			alert('Only PDF and JPG/JPEG files are allowed');
+			input.value = '';
+			submitBtn.disabled = true;
+			return;
+		}
+
+		submitBtn.disabled = false;
+	}
+</script>

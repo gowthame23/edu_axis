@@ -1,0 +1,124 @@
+<% assignments.forEach(async assignment=>{ %>
+
+<div >
+	<!-- card -->
+	<div class="nature-card m-3" data-tags="a beautiful landscape - nature outdoor" >
+		<div class="uk-card uk-card-small uk-card-default">
+			<div class="uk-card-header">
+				<div class="uk-grid uk-grid-small uk-text-small" data-uk-grid>
+					<div class="uk-width-expand">
+						<span class="cat-txt" data-uk-tooltip="title: Title">
+							<%= assignment.title %>
+						</span>
+					</div>
+
+					<div
+						data-uk-tooltip="title: Class"
+						class="uk-width-auto uk-text-right uk-text-muted"
+					>
+						<% if(deadlineReached(assignment.deadline)){ %>
+						<span
+							data-uk-tooltip="title: Status: Expired "
+							class="uk-text-danger"
+						>
+							🔴 Deadline Reached
+						</span>
+						<% }else{ %>
+						<span
+							data-uk-tooltip="title: Status: Active "
+							class="uk-text-success"
+						>
+							🟢 Active
+						</span>
+						<% } %>
+					</div>
+				</div>
+			</div>
+			<div class="uk-card-body">
+				<h6
+					class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold"
+					data-uk-tooltip="title: Title"
+				>
+					<%= assignment.title %>
+				</h6>
+				<p class="uk-text-small uk-text-muted" data-uk-tooltip="title: Details">
+					<%= assignment.description %>
+				</p>
+				<p class="uk-text-small uk-text-muted" data-uk-tooltip="title: Details">
+					Posted: <%= formatDate(assignment.createdAt) %>
+					<span class="uk-text-primary"> At </span> <%= new
+					Date(assignment.createdAt).toLocaleTimeString() %> Hrs
+				</p>
+			</div>
+
+			<div class="uk-card-footer">
+				<div
+					class="uk-grid uk-grid-small uk-grid-divider uk-flex uk-flex-middle"
+					data-uk-grid
+				>
+					<div class="uk-width-expand uk-text-small">
+						<small>Deadline:</small> <br />
+						<%= formatDate(assignment.deadline) %>
+						<span class="uk-text-primary"> At </span> <%= new
+						Date(assignment.deadline).toLocaleTimeString() %> Hrs
+					</div>
+					<!-- <div class="uk-width-auto uk-text-right">
+						<a
+							href="/assignments"
+							class="uk-icon-link"
+							title="Edit"
+							data-uk-tooltip
+							data-uk-icon="icon: cog"
+						></a>
+					</div> -->
+					<div class="uk-width-auto uk-text-right">
+						<div class="uk-button-group">
+							<!-- Download Assignment Button -->
+							<a href="/assignments/download/<%= assignment._id %>"
+								target="_blank"
+								class="uk-button uk-button-small uk-button-secondary"
+								data-uk-tooltip="title: Download Assignment">
+								<span uk-icon="download"></span>
+							</a>
+
+							<% if (type === "Student") { %>
+								<!-- Submit Assignment Button -->
+								<button class="uk-button uk-button-small uk-button-primary" 
+										onclick="openSubmissionModal('<%= assignment._id %>')"
+										data-uk-tooltip="title: Submit Assignment">
+									<span uk-icon="upload"></span>
+								</button>
+							<% } %>
+
+							<% if (type === "Teacher") { %>
+								<!-- View Submissions Button -->
+								<button class="uk-button uk-button-small uk-button-primary"
+										onclick="viewSubmissions('<%= assignment._id %>')"
+										data-uk-tooltip="title: View Submissions">
+									<span uk-icon="list"></span>
+								</button>
+								<!-- Delete Assignment Button -->
+								<form id="<%= assignment._id %>"
+									action="/assignments/delete/<%= assignment._id %>"
+									method="post"
+									class="uk-display-inline">
+									<input type="hidden"
+										name="filePath"
+										value="<%= assignment.filePath %>" />
+									<button type="button"
+										class="uk-button uk-button-small uk-button-danger"
+										data-uk-tooltip="title: Delete Assignment"
+										onclick="confirmDelete('<%= assignment._id %>')">
+										<span uk-icon="trash"></span>
+									</button>
+								</form>
+							<% } %>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /card -->
+</div>
+<% }) %>

@@ -1,0 +1,60 @@
+.nature-card .uk-card {
+    border-top-color: #1e87f0;
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+.nature-card .uk-card .cat-txt {
+    color: #1e87f0;
+}
+
+.message-header-text {
+    color: #1e87f0;
+}
+
+.message-status {
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.message-status.unread {
+    color: #f0506e;
+}
+
+.message-status.read {
+    color: #32d296;
+}
+
+.message-title {
+    color: #333;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.uk-card-body {
+    background-color: #fff;
+    color: #333;
+}
+
+.uk-card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.075);
+}
+
+/* Message animations */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.nature-card {
+    animation: slideIn 0.3s ease-out forwards;
+}
