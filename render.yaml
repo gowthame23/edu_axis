@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: eduaxis
+    env: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CSRF_SECRET
+        generateValue: true
+      - key: REDIS_ENABLED
+        value: "false"
+      - key: SOLR_ENABLED
+        value: "false"

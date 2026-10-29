@@ -45,7 +45,7 @@ export const corsOptions = {
     }
     
     // Check if the origin is in the allowed list
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || (origin && origin.endsWith('.onrender.com'))) {
       callback(null, true);
     } else {
       console.warn(`⚠️  CORS blocked request from origin: ${origin}`);

@@ -12,7 +12,16 @@ const getEnvValue = (key, fallback) => {
 
 const stripTrailingSlash = (value) => String(value || '').replace(/\/$/, '');
 
-export const getApiBaseUrl = () => stripTrailingSlash(getEnvValue('VITE_API_URL', 'http://localhost:5000/api'));
+export const getApiBaseUrl = () => {
+  const envVal = getEnvValue('VITE_API_URL', '');
+  if (envVal) return stripTrailingSlash(envVal);
+  if (typeof window !== 'undefined' && window.location.origin) {
+    if (!window.location.origin.includes('localhost') && !window.location.origin.includes('127.0.0.1')) {
+      return `${window.location.origin}/api`;
+    }
+  }
+  return 'http://localhost:5000/api';
+};
 
 export const getSocketBaseUrl = () => stripTrailingSlash(
   getEnvValue('VITE_SOCKET_URL', getApiBaseUrl().replace(/\/api$/, ''))

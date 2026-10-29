@@ -8,6 +8,8 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "start": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run start:backend\" \"npm run dev:frontend\"",
     "start:backend": "npm --prefix Backend start",
+    "build": "npm --prefix Backend install && npm --prefix frontend install && npm --prefix frontend run build",
+    "start:prod": "cd Backend && node server.js",
     "install:all": "npm install && npm --prefix Backend install && npm --prefix frontend install"
   },
   "dependencies": {
