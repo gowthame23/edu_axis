@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.0.1",
     "@tailwindcss/vite": "^4.1.15",
+    "@vitejs/plugin-react": "^5.0.4",
     "axios": "^1.12.2",
     "chart.js": "^4.5.1",
     "lucide-react": "^0.546.0",
@@ -27,14 +28,13 @@
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.15",
+    "vite": "^7.1.7",
     "yup": "^1.7.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.3",
-    "@vitejs/plugin-react": "^5.0.4",
     "baseline-browser-mapping": "^2.9.19",
-    "vite": "^7.1.7",
     "vitest": "^3.2.4"
   }
 }
