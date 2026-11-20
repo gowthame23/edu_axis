@@ -151,6 +151,127 @@ describe('Authentication Controller & Middleware', () => {
       expect(res.body.token).toBe('mocked-jwt-token');
       expect(res.cookie).toHaveBeenCalledWith('authToken', 'mocked-jwt-token', expect.any(Object));
     });
+
+    it('register with client-supplied schoolId and no valid school code or domain returns 400 and creates no user', async () => {
+      User.findOne = vi.fn().mockResolvedValue(null);
+      School.findOne = vi.fn().mockResolvedValue(null);
+      User.create = vi.fn();
+
+      const req = {
+        body: {
+          name: 'Attacker',
+          email: 'attacker@gmail.com',
+          password: 'password123',
+          role: 'student',
+          grade: '10',
+          schoolId: 'victim-school-id'
+        }
+      };
+      const res = createRes();
+
+      await register(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toContain('Could not identify your school');
+      expect(User.create).not.toHaveBeenCalled();
+    });
+
+    it('register with valid schoolCode works and user gets that school\'s id', async () => {
+      User.findOne = vi.fn().mockResolvedValue(null);
+      School.findOne = vi.fn().mockResolvedValue({ _id: 'school-123', code: 'VALIDCODE', status: 'active' });
+      User.create = vi.fn().mockResolvedValue({
+        _id: 'user-new',
+        name: 'Student',
+        email: 'student@example.com',
+        role: 'student',
+        schoolId: 'school-123',
+        grade: '10',
+        generateAuthToken: vi.fn().mockReturnValue('tok'),
+        toJSON: vi.fn().mockReturnValue({ _id: 'user-new', schoolId: 'school-123' })
+      });
+
+      const req = {
+        body: {
+          name: 'Student',
+          email: 'student@example.com',
+          password: 'password123',
+          role: 'student',
+          grade: '10',
+          schoolCode: 'VALIDCODE'
+        },
+        headers: {}
+      };
+      const res = createRes();
+
+      await register(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(User.create).toHaveBeenCalledWith(expect.objectContaining({
+        schoolId: 'school-123'
+      }));
+    });
+
+    it('register with valid schoolCode AND a different client-supplied schoolId gets the school matching the code, NEVER the supplied schoolId', async () => {
+      User.findOne = vi.fn().mockResolvedValue(null);
+      School.findOne = vi.fn().mockResolvedValue({ _id: 'real-school-456', code: 'SCH456', status: 'active' });
+      User.create = vi.fn().mockResolvedValue({
+        _id: 'user-new',
+        name: 'Student',
+        email: 'student@example.com',
+        role: 'student',
+        schoolId: 'real-school-456',
+        grade: '10',
+        generateAuthToken: vi.fn().mockReturnValue('tok'),
+        toJSON: vi.fn().mockReturnValue({ _id: 'user-new', schoolId: 'real-school-456' })
+      });
+
+      const req = {
+        body: {
+          name: 'Student',
+          email: 'student@example.com',
+          password: 'password123',
+          role: 'student',
+          grade: '10',
+          schoolCode: 'SCH456',
+          schoolId: 'attacker-chosen-school-id'
+        },
+        headers: {}
+      };
+      const res = createRes();
+
+      await register(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(User.create).toHaveBeenCalledWith(expect.objectContaining({
+        schoolId: 'real-school-456'
+      }));
+      expect(User.create).not.toHaveBeenCalledWith(expect.objectContaining({
+        schoolId: 'attacker-chosen-school-id'
+      }));
+    });
+
+    it('register as superadmin through public route is still blocked/handled exactly as before', async () => {
+      User.findOne = vi.fn().mockResolvedValue(null);
+      User.create = vi.fn();
+
+      const req = {
+        body: {
+          name: 'Hacker Superadmin',
+          email: 'hacker@super.com',
+          password: 'password123',
+          role: 'superadmin'
+        }
+      };
+      const res = createRes();
+
+      await register(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toContain('Admin accounts cannot be created through public registration');
+      expect(User.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('User Login & Logout', () => {

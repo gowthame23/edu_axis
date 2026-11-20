@@ -33,3 +33,24 @@
 - **Legacy Codebase Check:** Confirmed `legacy_ejs_version` is completely deleted from disk and has zero imports in application code.
 - **Reports:** Overwrote `edu_axis/REPORT.md` with honest audit details, route table, raw execution outputs, and "Needs my decision" item.
 
+## 2026-11-21 — Security Hardening: Ignore Client-Supplied schoolId on Registration
+
+- **Security Fix in `Backend/controllers/authController.js`:**
+  - Hardened `register` controller to ignore client-supplied `req.body.schoolId` completely.
+  - For non-superadmin roles, school is resolved strictly via `findSchoolForUser(email, schoolCode)`.
+  - If no matching active school is found, returns HTTP 400 with `'Could not identify your school. Please provide a valid school code or use your school email domain.'`. If school is suspended/inactive, returns HTTP 403.
+  - `finalSchoolId` is assigned strictly to `school._id`.
+- **Frontend Form Verification:**
+  - Audited all frontend components and forms under `frontend/src`. Confirmed that `Register.jsx` submits only `schoolCode` and never sends `schoolId`. No frontend registration form sends `schoolId`.
+- **Automated Tests Authored:**
+  - Added 4 new unit tests in `Backend/tests/auth.test.js`:
+    1. Rejects registration with raw `schoolId` and no valid code/domain (400, no user created).
+    2. Allows registration with valid `schoolCode` and assigns matching `schoolId`.
+    3. Overrides attacker-supplied `schoolId` when valid `schoolCode` is provided (assigns code-resolved school, never supplied `schoolId`).
+    4. Confirms public registration as `superadmin` remains blocked (403).
+- **Checks Verified (one at a time):**
+  - Backend Vitest: 7 passed, 63 passed (11.29s).
+  - Frontend Vitest: 2 passed, 9 passed (7.69s).
+  - Frontend Build: `vite build` completed cleanly (5.27s).
+- **Documentation:** Updated route table and removed registration item from "Needs my decision" in `edu_axis/REPORT.md`.
+

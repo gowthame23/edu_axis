@@ -68,7 +68,7 @@ Audit of all API routes that accept `school_id`, `schoolId`, `tenant_id`, or `sc
 
 | Method & Route | Parameter Location | Middleware Route Guards | Guard Status & Analysis |
 | :--- | :--- | :--- | :--- |
-| `POST /api/auth/register` | `req.body.schoolId`, `req.body.schoolCode` | None (Public route) | **Unguarded**. Public registration accepts client-supplied `schoolId` and `schoolCode`. *(See "Needs my decision" below).* |
+| `POST /api/auth/register` | `req.body.schoolCode` (`req.body.schoolId` ignored) | None (Public route) | **Guarded internally**. Client-supplied `schoolId` is strictly ignored; school is determined solely from valid `schoolCode` or verified school email domain via `findSchoolForUser`. Returns 400 if unresolvable, 403 if inactive. |
 | `POST /api/auth/login` | `req.body.schoolCode` | None (Public route) | **Guarded internally**. Controller verifies that `schoolCode` strictly matches the registered `user.schoolId`. |
 | `GET /api/b2b/v1/schools/:schoolCode/summary` | `req.params.schoolCode` | `b2bApiKeyAuth` | **Guarded by B2B API Key**. Validates partner API key, but allows querying summary metrics for any school code provided in the path. |
 | `GET /api/superadmin/schools` | None | `authMiddleware`, `roleMiddleware('superadmin')` | **Guarded**. SuperAdmin only. |
@@ -83,27 +83,26 @@ Audit of all API routes that accept `school_id`, `schoolId`, `tenant_id`, or `sc
 
 ---
 
-## 4. Needs My Decision (Security & Isolation Finding)
+## 4. Security & Isolation Fix: Public Registration Hardening
 
-During this audit, a potential cross-tenant registration vulnerability was discovered in application code:
+The cross-tenant registration vulnerability previously flagged under "Needs my decision" has been fixed and verified:
 
-- **Location**: `Backend/controllers/authController.js`, lines 91–115 (`register` function).
-- **Issue**: When registering a new user, if `email` does not match an institutional domain and `schoolCode` is omitted or invalid, `findSchoolForUser` returns `null`. The code checks:
-  ```javascript
-  if (!school && !schoolId) {
-    return res.status(400).json({ message: 'Could not identify your school...' });
-  }
-  finalSchoolId = school ? school._id : schoolId;
-  if (school && school.status !== 'active') { ... }
-  ```
-  If an attacker passes a raw `schoolId` (e.g. `{ email: "attacker@gmail.com", role: "teacher", schoolId: "<victim_school_id>" }`), `!school && !schoolId` evaluates to False, `finalSchoolId` is assigned directly to the unverified `schoolId`, and the active status check is bypassed (because `school` is null). This allows an attacker to register directly into an arbitrary school tenant without domain validation or school authorization.
-- **Proposed Fix (if approved)**: In `authController.js:register`, disallow trusting raw `req.body.schoolId` without resolution; require `schoolId` to be looked up via `School.findById(schoolId)` and verify `school.status === 'active'` before setting `finalSchoolId`.
+- **Location**: `Backend/controllers/authController.js`, lines 91–114 (`register` function).
+- **Vulnerability Addressed**: Previously, if `findSchoolForUser(email, schoolCode)` returned `null`, the endpoint fell back to trusting client-supplied `req.body.schoolId`, bypassing active school status checks and allowing arbitrary tenant joining.
+- **Implementation**:
+  - For non-superadmin roles, the school is resolved **strictly** via `const school = await findSchoolForUser(email, schoolCode);`.
+  - If `!school`, registration immediately returns 400 with `'Could not identify your school. Please provide a valid school code or use your school email domain.'`.
+  - If `school.status !== 'active'`, registration returns 403 `'School is currently ${school.status}. Please contact your administrator.'`.
+  - Client-supplied `req.body.schoolId` is completely ignored; `finalSchoolId` is assigned only from `school._id`.
+  - Superadmin accounts through public registration remain forbidden (HTTP 403).
+- **Frontend Form Audit**: Inspected `frontend/src`. Confirmed that `Register.jsx` sends only `schoolCode` (alongside standard user attributes) and **never sends `schoolId`**. No frontend form sends `schoolId` on registration.
+- **Unit & Integration Tests**: Added 4 dedicated tests in `Backend/tests/auth.test.js` validating that client-supplied `schoolId` without a valid school code/domain returns 400 without creating a user, valid `schoolCode` attaches the correct school, client-supplied `schoolId` is ignored even when submitted alongside a valid code, and superadmin registration remains blocked.
 
 ---
 
 ## 5. Raw Check Output
 
-### Backend Vitest Suite (7 files, 59 tests)
+### Backend Vitest Suite (7 files, 63 tests)
 ```
 > eduaxis-backend@1.0.0 test
 > vitest run
@@ -111,21 +110,21 @@ During this audit, a potential cross-tenant registration vulnerability was disco
 
  RUN  v3.2.7 C:/Users/gowth/OneDrive/Desktop/GOWTHAM/PROJECTS/sde/edu_axis/Backend
 
- ✓ tests/middleware/b2bAuth.test.js (5 tests) 7ms
+ ✓ tests/middleware/b2bAuth.test.js (5 tests) 9ms
 stderr | tests/controllers/webServiceController.test.js > webServiceController > falls back to built-in holidays when the upstream provider returns an empty body
 B2B holidays external provider failed; using fallback data: Empty response body from external service
 
- ✓ tests/controllers/webServiceController.test.js (2 tests) 174ms
- ✓ tests/services/cacheService.test.js (2 tests) 4ms
- ✓ tests/auth.test.js (19 tests) 74ms
- ✓ tests/feePayments.test.js (15 tests) 42ms
- ✓ tests/tenantIsolation.test.js (15 tests) 87ms
- ✓ tests/docs/swaggerCoverage.test.js (1 test) 3ms
+ ✓ tests/controllers/webServiceController.test.js (2 tests) 164ms
+ ✓ tests/services/cacheService.test.js (2 tests) 6ms
+ ✓ tests/auth.test.js (23 tests) 89ms
+ ✓ tests/feePayments.test.js (15 tests) 73ms
+ ✓ tests/tenantIsolation.test.js (15 tests) 115ms
+ ✓ tests/docs/swaggerCoverage.test.js (1 test) 6ms
 
  Test Files  7 passed (7)
-      Tests  59 passed (59)
-   Start at  00:42:15
-   Duration  11.49s (transform 1.05s, setup 0ms, collect 12.02s, tests 392ms, environment 1ms, prepare 1.32s)
+      Tests  63 passed (63)
+   Start at  01:59:20
+   Duration  11.29s (transform 1.21s, setup 0ms, collect 13.19s, tests 462ms, environment 1ms, prepare 1.39s)
 ```
 
 ### Frontend Vitest Suite (2 files, 9 tests)
@@ -136,13 +135,13 @@ B2B holidays external provider failed; using fallback data: Empty response body 
 
  RUN  v3.2.7 C:/Users/gowth/OneDrive/Desktop/GOWTHAM/PROJECTS/sde/edu_axis/frontend
 
- ✓ src/store/slices/uiSlice.test.js (4 tests) 4ms
- ✓ src/store/slices/authSlice.test.js (5 tests) 5ms
+ ✓ src/store/slices/uiSlice.test.js (4 tests) 7ms
+ ✓ src/store/slices/authSlice.test.js (5 tests) 6ms
 
  Test Files  2 passed (2)
       Tests  9 passed (9)
-   Start at  00:42:38
-   Duration  8.27s (transform 69ms, setup 0ms, collect 102ms, tests 9ms, environment 0ms, prepare 206ms)
+   Start at  01:59:40
+   Duration  7.69s (transform 80ms, setup 0ms, collect 174ms, tests 13ms, environment 0ms, prepare 383ms)
 ```
 
 ### Frontend Production Build
@@ -158,6 +157,12 @@ computing gzip size...
 dist/index.html                          0.80 kB │ gzip:   0.38 kB
 dist/assets/index-aI6r4kZv.css         124.92 kB │ gzip:  19.76 kB
 dist/assets/vendor-icons-CCWU1bE6.js    14.05 kB │ gzip:   5.33 kB
+dist/assets/vendor-redux-YVlc7Mz4.js    39.72 kB │ gzip:  14.55 kB
+dist/assets/vendor-react-Oz8O28kZ.js   179.84 kB │ gzip:  59.28 kB
+dist/assets/vendor-charts-DbmftDp9.js  526.19 kB │ gzip: 162.75 kB
+dist/assets/index-CoCyitUE.js          709.56 kB │ gzip: 157.83 kB
+✓ built in 5.27s
+```
 dist/assets/vendor-redux-YVlc7Mz4.js    39.72 kB │ gzip:  14.55 kB
 dist/assets/vendor-react-Oz8O28kZ.js   179.84 kB │ gzip:  59.28 kB
 dist/assets/vendor-charts-DbmftDp9.js  526.19 kB │ gzip: 162.75 kB

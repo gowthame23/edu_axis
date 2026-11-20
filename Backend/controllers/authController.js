@@ -89,29 +89,28 @@ export const register = async (req, res) => {
     }
     
     // Determine schoolId for non-superadmin roles
-    let finalSchoolId = schoolId;
+    let finalSchoolId = null;
     
     if (effectiveRole !== 'superadmin') {
-      // Try to find school by code or email domain
+      // Determine school ONLY from schoolCode or email domain
       const school = await findSchoolForUser(email, schoolCode);
       
-      if (!school && !schoolId) {
+      if (!school) {
         return res.status(400).json({ 
           success: false,
           message: 'Could not identify your school. Please provide a valid school code or use your school email domain.' 
         });
       }
       
-      // Use found school or provided schoolId
-      finalSchoolId = school ? school._id : schoolId;
-      
       // Verify school is active
-      if (school && school.status !== 'active') {
+      if (school.status !== 'active') {
         return res.status(403).json({ 
           success: false,
           message: `School is currently ${school.status}. Please contact your administrator.` 
         });
       }
+
+      finalSchoolId = school._id;
     }
 
     if (effectiveRole === 'student') {
