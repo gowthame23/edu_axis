@@ -17,3 +17,19 @@
 - **CI Workflow:** Authored `.github/workflows/ci.yml` running install, lint, test, and production build for both backend and frontend. Added `lint` and `test` scripts in `package.json`.
 - **Architecture Documentation:** Added a Multi-Tenant Data Isolation section with Mermaid diagram to `README.md`.
 - **Reports:** Authored `edu_axis/REPORT.md`.
+
+## 2026-11-21 — Verification, Route Guard Audit, and Real vs Mock Classification
+
+- **Test Suite Verification:**
+  - Executed backend tests once (`npm test` in `Backend`): 7 test files, 59 tests passed in 11.49s.
+  - Executed frontend tests once (`npm test` in `frontend`): 2 test files, 9 tests passed in 8.27s.
+  - Executed frontend production build (`npm run build` in `frontend`): `vite build` generated client distribution bundle cleanly in 4.30s.
+  - Test counts verified: exactly 59 backend and 9 frontend tests, matching claimed totals.
+- **Tenant Isolation Audit (`tenantIsolation.test.js`):**
+  - Classified test coverage: all 6 models (`User`, `Course`, `Enrollment`, `Feedback`, `Quiz`, `QuizAttempt`) and `cacheService` are mocked; there is no live MongoDB connection. Real code executed and verified includes tenant guard middleware functions (`assertSameSchoolUser`, `assertSameSchoolStudent`, `assertSameSchoolCourse`) and controller query construction logic.
+- **Route Guard Audit:**
+  - Audited all routes accepting school/tenant identifiers. All internal student, teacher, and admin routes strictly derive `schoolId` from the authenticated JWT session via `req.schoolId` / `req.user.schoolId`.
+  - Discovered cross-tenant vulnerability in `Backend/controllers/authController.js:91-115` (`register` accepts raw client-supplied `schoolId` without resolving/validating the school document if domain matching yields null). Documented under "Needs my decision" without changing code.
+- **Legacy Codebase Check:** Confirmed `legacy_ejs_version` is completely deleted from disk and has zero imports in application code.
+- **Reports:** Overwrote `edu_axis/REPORT.md` with honest audit details, route table, raw execution outputs, and "Needs my decision" item.
+
