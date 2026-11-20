@@ -888,7 +888,7 @@ export const makePayment = async (req, res) => {
     });
 
     // Emit socket event for real-time updates
-    const io = req.app.get('io');
+    const io = req.app?.get ? req.app.get('io') : null;
     if (io) {
       // Broadcast to all admin users in the school
       io.emit('payment:created', {

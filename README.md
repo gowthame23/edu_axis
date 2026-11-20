@@ -5,6 +5,7 @@ A comprehensive School Management System built with **Node.js**, **Express**, **
 ## Table of Contents
 
 - [Features](#features)
+- [Multi-Tenant Data Isolation](#multi-tenant-data-isolation)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
@@ -45,6 +46,47 @@ A comprehensive School Management System built with **Node.js**, **Express**, **
 - **User Analytics**: View platform-wide metrics and growth trends
 - **School Onboarding**: Create schools with initial admin accounts
 - **Multi-tenant Security**: Complete data isolation between schools
+
+## Multi-Tenant Data Isolation
+
+EduAxis enforces strict multi-tenant boundaries between schools across every layer of the architecture:
+
+```mermaid
+flowchart TD
+    Client["Client Request (Cookie / JWT)"] --> Auth["authMiddleware"]
+    Auth --> VerifyToken["Verify JWT & Decode User"]
+    VerifyToken --> SchoolCheck{"School Active & Valid?"}
+    SchoolCheck -- No --> Block403["403 Forbidden / 404 Not Found"]
+    SchoolCheck -- Yes --> Context["Attach req.schoolId & req.user"]
+    Context --> Guard["Tenant Guards (assertSameSchool*)"]
+    Guard --> Query["Scoped Query: { _id, schoolId: req.schoolId }"]
+    Query --> Cache["Isolated Cache: prefix:schoolId:*"]
+    Cache --> Response["Safe Isolated Response"]
+```
+
+### 1. Request Context & Authentication Binding
+- `authMiddleware` validates incoming JWT tokens (via HTTP-only cookies or Authorization Bearer header).
+- For non-superadmin accounts, the middleware verifies that the user's associated `School` exists and has an `active` status.
+- It attaches immutable context `req.schoolId` and `req.school` directly to the request object. Controllers never trust client-supplied school IDs in request payloads.
+
+### 2. Mandatory Database Scoping
+- All school-scoped collections (`User`, `Course`, `Enrollment`, `Fee`, `Payment`, `Quiz`, `Feedback`, `Timetable`, `LeaveRequest`) enforce compound indexing on `{ schoolId: 1, ... }`.
+- Find, update, and delete queries always include `schoolId: req.schoolId` in their criteria (e.g., `Fee.findOne({ _id: id, schoolId: req.schoolId })`).
+- Multi-entity operations (e.g., recording a payment for a student and fee) verify that all referenced entities belong to the caller's `schoolId`.
+
+### 3. Defensive Tenant Guards
+- Standardized guard utilities in `middleware/tenantGuards.js` (`assertSameSchoolUser`, `assertSameSchoolStudent`, `assertSameSchoolCourse`) perform defensive lookups.
+- If a target entity exists in another school, the guard explicitly denies access with `403 Forbidden`, preventing cross-tenant information leakage or tampering.
+
+### 4. Role Hierarchy & Ownership Boundaries
+- **Superadmin:** Platform-level access across schools for provisioning and analytics.
+- **Admin:** Confined strictly to their own school's faculty, students, courses, fees, and reports. Cannot view or mutate records in other schools.
+- **Teacher:** Scoped to courses they teach within their designated school.
+- **Student:** Scoped to their enrolled courses, assignments, and personal fee payments within their school.
+
+### 5. Cache Namespacing
+- Redis cache keys are dynamically partitioned with `schoolId` prefixes (e.g., `student-fees:${schoolId}:${studentId}`, `admin-users:${schoolId}:*`).
+- Cache invalidation routines (`delCacheByPattern`) clear only the tenant's cache slice upon mutation, guaranteeing zero cross-tenant cache contamination.
 
 ## Tech Stack
 

@@ -2,7 +2,6 @@
 node_modules/
 Backend/node_modules/
 frontend/node_modules/
-legacy_ejs_version/node_modules/
 
 # Environment variables & credentials (NEVER commit secrets to GitHub)
 .env
@@ -10,7 +9,6 @@ legacy_ejs_version/node_modules/
 .env.production
 .env.development
 Backend/.env
-legacy_ejs_version/.env
 *.env
 !.env.example
 !Backend/.env.example

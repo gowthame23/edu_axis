@@ -251,9 +251,10 @@ export const reviewFeedback = async (req, res) => {
   try {
     const { feedbackId } = req.params;
     const { adminResponse, status } = req.body;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
-    const feedback = await Feedback.findByIdAndUpdate(
-      feedbackId,
+    const feedback = await Feedback.findOneAndUpdate(
+      { _id: feedbackId, schoolId },
       {
         adminResponse,
         status: status || 'reviewed'

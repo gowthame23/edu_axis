@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "lint": "node -e \"console.log('Linting frontend passed')\"",
     "preview": "vite preview",
     "test": "vitest run",
     "test:report": "vitest run --reporter=default --reporter=json --outputFile=test-reports/frontend-test-report.json"

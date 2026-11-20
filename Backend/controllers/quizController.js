@@ -52,8 +52,9 @@ export const createQuiz = async (req, res) => {
 export const getQuiz = async (req, res) => {
   try {
     const { quizId } = req.params;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
-    const quiz = await Quiz.findById(quizId)
+    const quiz = await Quiz.findOne({ _id: quizId, schoolId })
       .populate('prerequisiteModuleId', 'title order')
       .lean();
 
@@ -82,8 +83,9 @@ export const getQuiz = async (req, res) => {
 export const checkQuizPrerequisite = async (req, res) => {
   try {
     const { quizId, studentId } = req.params;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
-    const quiz = await Quiz.findById(quizId).select('prerequisiteModuleId title');
+    const quiz = await Quiz.findOne({ _id: quizId, schoolId }).select('prerequisiteModuleId title');
     if (!quiz) {
       return res.status(404).json({
         success: false,
@@ -103,7 +105,8 @@ export const checkQuizPrerequisite = async (req, res) => {
     // Check if student completed prerequisite module
     const enrollment = await Enrollment.findOne({
       studentId,
-      courseId: quiz.courseId
+      courseId: quiz.courseId,
+      schoolId
     });
 
     if (!enrollment) {
@@ -137,10 +140,10 @@ export const checkQuizPrerequisite = async (req, res) => {
 export const startQuizAttempt = async (req, res) => {
   try {
     const { quizId, studentId, courseId } = req.body;
-    const { schoolId } = req.user;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
     // Check prerequisite
-    const quiz = await Quiz.findById(quizId);
+    const quiz = await Quiz.findOne({ _id: quizId, schoolId });
     if (!quiz) {
       return res.status(404).json({
         success: false,
@@ -203,8 +206,13 @@ export const startQuizAttempt = async (req, res) => {
 export const submitQuizAttempt = async (req, res) => {
   try {
     const { attemptId, answers } = req.body;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
-    const attempt = await QuizAttempt.findById(attemptId);
+    const query = { _id: attemptId, schoolId };
+    if (req.user?.role === 'student') {
+      query.studentId = req.user._id;
+    }
+    const attempt = await QuizAttempt.findOne(query);
     if (!attempt) {
       return res.status(404).json({
         success: false,
@@ -212,7 +220,7 @@ export const submitQuizAttempt = async (req, res) => {
       });
     }
 
-    const quiz = await Quiz.findById(attempt.quizId);
+    const quiz = await Quiz.findOne({ _id: attempt.quizId, schoolId });
     if (!quiz) {
       return res.status(404).json({
         success: false,
@@ -279,8 +287,14 @@ export const submitQuizAttempt = async (req, res) => {
 export const getQuizResults = async (req, res) => {
   try {
     const { attemptId } = req.params;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
-    const attempt = await QuizAttempt.findById(attemptId)
+    const query = { _id: attemptId, schoolId };
+    if (req.user?.role === 'student') {
+      query.studentId = req.user._id;
+    }
+
+    const attempt = await QuizAttempt.findOne(query)
       .populate('quizId', 'title totalMarks passingScore')
       .select('-schoolId');
 

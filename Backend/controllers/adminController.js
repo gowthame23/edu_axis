@@ -370,6 +370,9 @@ export const updateUser = async (req, res) => {
       user: updatedUser
     });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message).join(', ');
       return res.status(400).json({ success: false, message: messages });
@@ -741,6 +744,9 @@ export const createCourse = async (req, res) => {
       course: newCourse
     });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message).join(', ');
       return res.status(400).json({ success: false, message: messages });
@@ -784,6 +790,9 @@ export const updateCourse = async (req, res) => {
       course
     });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message).join(', ');
       return res.status(400).json({ success: false, message: messages });
@@ -873,6 +882,9 @@ export const createFee = async (req, res) => {
 
     res.json({ success: true, message: 'Fee created successfully', fee: newFee });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message).join(', ');
       return res.status(400).json({ success: false, message: messages });
@@ -903,6 +915,9 @@ export const updateFee = async (req, res) => {
 
     res.json({ success: true, message: 'Fee updated successfully', fee: updatedFee });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message).join(', ');
       return res.status(400).json({ success: false, message: messages });
@@ -1073,6 +1088,9 @@ export const createPayment = async (req, res) => {
 
     res.json({ success: true, message: 'Payment recorded successfully', payment: newPayment });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message).join(', ');
       return res.status(400).json({ success: false, message: messages });

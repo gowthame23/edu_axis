@@ -11,6 +11,7 @@
     "perf:phase1": "node scripts/phase1PerfReport.js",
     "solr:reindex": "node scripts/solrReindex.js",
     "test": "vitest run",
+    "lint": "node --check server.js",
     "test:report": "vitest run --reporter=default --reporter=json --outputFile=test-reports/backend-test-report.json"
   },
   "keywords": [

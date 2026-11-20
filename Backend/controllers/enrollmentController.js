@@ -1,6 +1,7 @@
 import Enrollment from '../models/Enrollment.js';
 import Course from '../models/Course.js';
 import Module from '../models/Module.js';
+import User from '../models/User.js';
 
 // Get all enrollments for a student
 export const getStudentEnrollments = async (req, res) => {
@@ -81,11 +82,28 @@ export const getAvailableCourses = async (req, res) => {
 export const enrollCourse = async (req, res) => {
   try {
     const { studentId, courseId } = req.body;
-    const { schoolId } = req.user;
+    const schoolId = req.schoolId || req.user?.schoolId;
+
+    const effectiveStudentId = (req.user?.role === 'student') ? req.user._id : studentId;
+    if (!effectiveStudentId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Student ID is required'
+      });
+    }
+
+    // Verify student belongs to this school
+    const student = await User.findOne({ _id: effectiveStudentId, schoolId, role: 'student' });
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: 'Student not found in your school'
+      });
+    }
 
     // Check if already actively enrolled
     const activeEnrollment = await Enrollment.findOne({
-      studentId,
+      studentId: effectiveStudentId,
       courseId,
       schoolId,
       status: 'active'
@@ -100,7 +118,7 @@ export const enrollCourse = async (req, res) => {
 
     // Check if there's a dropped/previous enrollment to reactivate
     const droppedEnrollment = await Enrollment.findOne({
-      studentId,
+      studentId: effectiveStudentId,
       courseId,
       schoolId,
       status: { $in: ['dropped', 'completed'] }
@@ -120,18 +138,18 @@ export const enrollCourse = async (req, res) => {
       });
     }
 
-    // Get course details
-    const course = await Course.findById(courseId);
+    // Get course details ensuring it belongs to caller's school
+    const course = await Course.findOne({ _id: courseId, schoolId });
     if (!course) {
       return res.status(404).json({
         success: false,
-        message: 'Course not found'
+        message: 'Course not found in your school'
       });
     }
 
     // Create new enrollment
     const enrollment = new Enrollment({
-      studentId,
+      studentId: effectiveStudentId,
       courseId,
       schoolId,
       status: 'active',
@@ -193,10 +211,11 @@ export const getCourseEnrollmentStats = async (req, res) => {
 export const updateEnrollment = async (req, res) => {
   try {
     const { enrollmentId } = req.params;
+    const schoolId = req.schoolId || req.user?.schoolId;
     const { grade, marks, attendance, status } = req.body;
 
-    const enrollment = await Enrollment.findByIdAndUpdate(
-      enrollmentId,
+    const enrollment = await Enrollment.findOneAndUpdate(
+      { _id: enrollmentId, schoolId },
       {
         ...(grade && { grade }),
         ...(marks !== undefined && { marks }),
@@ -233,9 +252,15 @@ export const updateEnrollment = async (req, res) => {
 export const dropCourse = async (req, res) => {
   try {
     const { enrollmentId } = req.params;
+    const schoolId = req.schoolId || req.user?.schoolId;
 
-    const enrollment = await Enrollment.findByIdAndUpdate(
-      enrollmentId,
+    const query = { _id: enrollmentId, schoolId };
+    if (req.user?.role === 'student') {
+      query.studentId = req.user._id;
+    }
+
+    const enrollment = await Enrollment.findOneAndUpdate(
+      query,
       { status: 'dropped', updatedAt: new Date() },
       { new: true }
     );

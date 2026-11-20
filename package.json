@@ -10,6 +10,8 @@
     "start:backend": "npm --prefix Backend start",
     "build": "npm --prefix Backend install --no-audit --no-fund && npm --prefix frontend install --include=dev --no-audit --no-fund && npm --prefix frontend run build",
     "start:prod": "cd Backend && node server.js",
+    "test": "npm --prefix Backend test && npm --prefix frontend test",
+    "lint": "npm --prefix Backend run lint && npm --prefix frontend run lint",
     "install:all": "npm install && npm --prefix Backend install && npm --prefix frontend install"
   },
   "dependencies": {
