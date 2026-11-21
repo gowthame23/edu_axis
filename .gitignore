@@ -37,3 +37,10 @@ Thumbs.db
 # Untrack test reports
 test-reports/
 *-test-report.json
+
+
+# Test reports and test suites kept local only
+Backend/tests/
+Backend/test-reports/
+frontend/test-reports/
+frontend/src/store/slices/*.test.js
