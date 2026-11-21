@@ -40,7 +40,6 @@ test-reports/
 
 
 # Test reports and test suites kept local only
-Backend/tests/
 Backend/test-reports/
 frontend/test-reports/
 frontend/src/store/slices/*.test.js
