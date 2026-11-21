@@ -33,3 +33,7 @@ Thumbs.db
 
 # Local session notes
 /session.md
+
+# Untrack test reports
+test-reports/
+*-test-report.json
